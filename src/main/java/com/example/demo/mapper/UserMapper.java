@@ -1,0 +1,30 @@
+package com.example.demo.mapper;
+
+import com.example.demo.model.User;
+import org.apache.ibatis.annotations.Mapper;
+
+/**
+* @author haha
+* @description 针对表【user(USER)】的数据库操作Mapper
+* @createDate 2025-04-05 12:59:23
+* @Entity com.example.demo.model.User
+*/
+@Mapper
+public interface UserMapper {
+
+    int deleteByPrimaryKey(Long id);
+
+    int insert(User record);
+
+    int insertSelective(User record);
+
+    User selectByPrimaryKey(Long id);
+
+    int updateByPrimaryKeySelective(User record);
+
+    int updateByPrimaryKey(User record);
+
+    // 新增通过用户名查询用户的方法
+    User selectByUsername(String username);
+
+}

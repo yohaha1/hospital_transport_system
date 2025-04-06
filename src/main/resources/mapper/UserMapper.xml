@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.demo.model.User">
+            <id property="userid" column="userID" />
+            <result property="username" column="username" />
+            <result property="password" column="password" />
+            <result property="role" column="role" />
+            <result property="name" column="name" />
+            <result property="contact" column="contact" />
+            <result property="departmentid" column="departmentID" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        userID,username,password,role,name,contact,
+        departmentID
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where  userID = #{userid} 
+    </select>
+
+    <!-- 根据用户名查询用户 -->
+    <select id="selectByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where username = #{username}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from user
+        where  userID = #{userid} 
+    </delete>
+    <insert id="insert" keyColumn="userID" keyProperty="userid" parameterType="com.example.demo.model.User" useGeneratedKeys="true">
+        insert into user
+        ( userID,username,password,role,name,contact,
+        departmentID)
+        values (#{userid},#{username},#{password},#{role},#{name},#{contact},
+        #{departmentid})
+    </insert>
+    <insert id="insertSelective" keyColumn="userID" keyProperty="userid" parameterType="com.example.demo.model.User" useGeneratedKeys="true">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="userid != null">userID,</if>
+                <if test="username != null">username,</if>
+                <if test="password != null">password,</if>
+                <if test="role != null">role,</if>
+                <if test="name != null">name,</if>
+                <if test="contact != null">contact,</if>
+                <if test="departmentid != null">departmentID,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="userid != null">#{userid},</if>
+                <if test="username != null">#{username},</if>
+                <if test="password != null">#{password},</if>
+                <if test="role != null">#{role},</if>
+                <if test="name != null">#{name},</if>
+                <if test="contact != null">#{contact},</if>
+                <if test="departmentid != null">#{departmentid},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.model.User">
+        update user
+        <set>
+                <if test="username != null">
+                    username = #{username},
+                </if>
+                <if test="password != null">
+                    password = #{password},
+                </if>
+                <if test="role != null">
+                    role = #{role},
+                </if>
+                <if test="name != null">
+                    name = #{name},
+                </if>
+                <if test="contact != null">
+                    contact = #{contact},
+                </if>
+                <if test="departmentid != null">
+                    departmentID = #{departmentid},
+                </if>
+        </set>
+        where   userID = #{userid} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.demo.model.User">
+        update user
+        set 
+            username =  #{username},
+            password =  #{password},
+            role =  #{role},
+            name =  #{name},
+            contact =  #{contact},
+            departmentID =  #{departmentid}
+        where   userID = #{userid} 
+    </update>
+</mapper>

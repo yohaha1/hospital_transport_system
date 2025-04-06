@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.TaskNodeMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.demo.model.TaskNode">
+            <id property="taskid" column="taskID" />
+            <id property="departmentid" column="departmentID" />
+            <result property="sequence" column="sequence" />
+            <result property="handovertime" column="handoverTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        taskID,departmentID,sequence,handoverTime
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from task_node
+        where  taskID = #{taskid} AND departmentID = #{departmentid} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from task_node
+        where  taskID = #{taskid} AND departmentID = #{departmentid} 
+    </delete>
+    <insert id="insert">
+        insert into task_node
+        ( taskID,departmentID,sequence,handoverTime)
+        values (#{taskid},#{departmentid},#{sequence},#{handovertime})
+    </insert>
+    <insert id="insertSelective">
+        insert into task_node
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="taskid != null">taskID,</if>
+                <if test="departmentid != null">departmentID,</if>
+                <if test="sequence != null">sequence,</if>
+                <if test="handovertime != null">handoverTime,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="taskid != null">#{taskid},</if>
+                <if test="departmentid != null">#{departmentid},</if>
+                <if test="sequence != null">#{sequence},</if>
+                <if test="handovertime != null">#{handovertime},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.model.TaskNode">
+        update task_node
+        <set>
+                <if test="sequence != null">
+                    sequence = #{sequence},
+                </if>
+                <if test="handovertime != null">
+                    handoverTime = #{handovertime},
+                </if>
+        </set>
+        where   taskID = #{taskid} AND departmentID = #{departmentid} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.demo.model.TaskNode">
+        update task_node
+        set 
+            sequence =  #{sequence},
+            handoverTime =  #{handovertime}
+        where   taskID = #{taskid} AND departmentID = #{departmentid} 
+    </update>
+</mapper>

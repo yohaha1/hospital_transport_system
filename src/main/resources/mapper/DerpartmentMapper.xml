@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.DerpartmentMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.demo.model.Derpartment">
+            <id property="departmentid" column="departmentID" />
+            <result property="departmentname" column="departmentName" />
+            <result property="address" column="address" />
+            <result property="qrcode" column="qrCode" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        departmentID,departmentName,address,qrCode
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from derpartment
+        where  departmentID = #{departmentid} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from derpartment
+        where  departmentID = #{departmentid} 
+    </delete>
+    <insert id="insert" keyColumn="departmentID" keyProperty="departmentid" parameterType="com.example.demo.model.Derpartment" useGeneratedKeys="true">
+        insert into derpartment
+        ( departmentID,departmentName,address,qrCode)
+        values (#{departmentid},#{departmentname},#{address},#{qrcode})
+    </insert>
+    <insert id="insertSelective" keyColumn="departmentID" keyProperty="departmentid" parameterType="com.example.demo.model.Derpartment" useGeneratedKeys="true">
+        insert into derpartment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="departmentid != null">departmentID,</if>
+                <if test="departmentname != null">departmentName,</if>
+                <if test="address != null">address,</if>
+                <if test="qrcode != null">qrCode,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="departmentid != null">#{departmentid},</if>
+                <if test="departmentname != null">#{departmentname},</if>
+                <if test="address != null">#{address},</if>
+                <if test="qrcode != null">#{qrcode},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.model.Derpartment">
+        update derpartment
+        <set>
+                <if test="departmentname != null">
+                    departmentName = #{departmentname},
+                </if>
+                <if test="address != null">
+                    address = #{address},
+                </if>
+                <if test="qrcode != null">
+                    qrCode = #{qrcode},
+                </if>
+        </set>
+        where   departmentID = #{departmentid} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.demo.model.Derpartment">
+        update derpartment
+        set 
+            departmentName =  #{departmentname},
+            address =  #{address},
+            qrCode =  #{qrcode}
+        where   departmentID = #{departmentid} 
+    </update>
+</mapper>

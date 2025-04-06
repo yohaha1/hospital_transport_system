@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.LocationRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.demo.model.LocationRecord">
+            <id property="recordid" column="recordID" />
+            <result property="taskid" column="taskID" />
+            <result property="userid" column="userID" />
+            <result property="location" column="location" />
+            <result property="timestamp" column="timestamp" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        recordID,taskID,userID,location,timestamp
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from location_record
+        where  recordID = #{recordid} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from location_record
+        where  recordID = #{recordid} 
+    </delete>
+    <insert id="insert" keyColumn="recordID" keyProperty="recordid" parameterType="com.example.demo.model.LocationRecord" useGeneratedKeys="true">
+        insert into location_record
+        ( recordID,taskID,userID,location,timestamp)
+        values (#{recordid},#{taskid},#{userid},#{location},#{timestamp})
+    </insert>
+    <insert id="insertSelective" keyColumn="recordID" keyProperty="recordid" parameterType="com.example.demo.model.LocationRecord" useGeneratedKeys="true">
+        insert into location_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="recordid != null">recordID,</if>
+                <if test="taskid != null">taskID,</if>
+                <if test="userid != null">userID,</if>
+                <if test="location != null">location,</if>
+                <if test="timestamp != null">timestamp,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="recordid != null">#{recordid},</if>
+                <if test="taskid != null">#{taskid},</if>
+                <if test="userid != null">#{userid},</if>
+                <if test="location != null">#{location},</if>
+                <if test="timestamp != null">#{timestamp},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.model.LocationRecord">
+        update location_record
+        <set>
+                <if test="taskid != null">
+                    taskID = #{taskid},
+                </if>
+                <if test="userid != null">
+                    userID = #{userid},
+                </if>
+                <if test="location != null">
+                    location = #{location},
+                </if>
+                <if test="timestamp != null">
+                    timestamp = #{timestamp},
+                </if>
+        </set>
+        where   recordID = #{recordid} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.demo.model.LocationRecord">
+        update location_record
+        set 
+            taskID =  #{taskid},
+            userID =  #{userid},
+            location =  #{location},
+            timestamp =  #{timestamp}
+        where   recordID = #{recordid} 
+    </update>
+</mapper>

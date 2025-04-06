@@ -1,0 +1,90 @@
+package com.example.demo.util;
+
+import com.example.demo.model.JwtEntity;
+import io.jsonwebtoken.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+import java.util.Date;
+import lombok.extern.slf4j.Slf4j;
+import jakarta.servlet.http.HttpServletRequest;
+
+
+@Slf4j
+@Component
+public class JwtTokenUtil {
+
+    @Value("${jwt.secret}")
+    private static String jwtSecret;
+
+    @Value("${jwt.expirationMs}")
+    private int jwtExpirationMs;
+
+    private static final String USER_INFO_CLAIM = "user-info";
+    public static final String TOKEN_HEADER = "Authorization";
+
+//    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    // 根据用户名生成 JWT
+    public String generateToken(JwtEntity jwtEntity) {
+        return Jwts.builder()
+                //第一部分 JWT头
+                .setHeaderParam("typ", "JWT")
+                .setHeaderParam("alg", "HS256")
+                .setSubject(jwtEntity.getName())                      // 设置 token 主体为用户名
+                .setIssuedAt(new Date())                   // 设置发行时间
+                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)) // 设置过期时间
+                .claim(USER_INFO_CLAIM, jwtEntity)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret) // 使用 HS512 算法签名
+                .compact();
+    }
+
+    public String generateToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .signWith(SignatureAlgorithm.HS256, jwtSecret)
+                .compact();
+    }
+
+    // 从 token 中提取用户名
+    public String extractUsername(String token) {
+        return Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    // 验证 token 是否有效
+    public static boolean validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+        } catch (JwtException e) {
+            log.info("token不存在,错误信息:{}",e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean validateToken(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    }
+
+    public static boolean validateToken(HttpServletRequest request) {
+        String jwtToken = request.getHeader(TOKEN_HEADER);
+        return validateToken(jwtToken);
+    }
+
+    private boolean isTokenExpired(String token) {
+        Date expiration = Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
+        return expiration.before(new Date());
+    }
+
+}

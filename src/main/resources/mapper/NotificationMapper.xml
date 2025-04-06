@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.NotificationMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.demo.model.Notification">
+            <id property="notificationid" column="notificationID" />
+            <result property="taskid" column="taskID" />
+            <result property="recipientid" column="recipientID" />
+            <result property="notificationtype" column="notificationType" />
+            <result property="message" column="message" />
+            <result property="sendtime" column="sendTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        notificationID,taskID,recipientID,notificationType,message,sendTime
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from notification
+        where  notificationID = #{notificationid} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from notification
+        where  notificationID = #{notificationid} 
+    </delete>
+    <insert id="insert" keyColumn="notificationID" keyProperty="notificationid" parameterType="com.example.demo.model.Notification" useGeneratedKeys="true">
+        insert into notification
+        ( notificationID,taskID,recipientID,notificationType,message,sendTime)
+        values (#{notificationid},#{taskid},#{recipientid},#{notificationtype},#{message},#{sendtime})
+    </insert>
+    <insert id="insertSelective" keyColumn="notificationID" keyProperty="notificationid" parameterType="com.example.demo.model.Notification" useGeneratedKeys="true">
+        insert into notification
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="notificationid != null">notificationID,</if>
+                <if test="taskid != null">taskID,</if>
+                <if test="recipientid != null">recipientID,</if>
+                <if test="notificationtype != null">notificationType,</if>
+                <if test="message != null">message,</if>
+                <if test="sendtime != null">sendTime,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="notificationid != null">#{notificationid},</if>
+                <if test="taskid != null">#{taskid},</if>
+                <if test="recipientid != null">#{recipientid},</if>
+                <if test="notificationtype != null">#{notificationtype},</if>
+                <if test="message != null">#{message},</if>
+                <if test="sendtime != null">#{sendtime},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.model.Notification">
+        update notification
+        <set>
+                <if test="taskid != null">
+                    taskID = #{taskid},
+                </if>
+                <if test="recipientid != null">
+                    recipientID = #{recipientid},
+                </if>
+                <if test="notificationtype != null">
+                    notificationType = #{notificationtype},
+                </if>
+                <if test="message != null">
+                    message = #{message},
+                </if>
+                <if test="sendtime != null">
+                    sendTime = #{sendtime},
+                </if>
+        </set>
+        where   notificationID = #{notificationid} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.demo.model.Notification">
+        update notification
+        set 
+            taskID =  #{taskid},
+            recipientID =  #{recipientid},
+            notificationType =  #{notificationtype},
+            message =  #{message},
+            sendTime =  #{sendtime}
+        where   notificationID = #{notificationid} 
+    </update>
+</mapper>

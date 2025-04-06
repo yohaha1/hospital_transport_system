@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.ReceivedNotificationMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.demo.model.ReceivedNotification">
+            <id property="notificationid" column="notificationID" />
+            <id property="userid" column="userID" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        notificationID,userID
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from received_notification
+        where  notificationID = #{notificationid} AND userID = #{userid} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from received_notification
+        where  notificationID = #{notificationid} AND userID = #{userid} 
+    </delete>
+    <insert id="insert">
+        insert into received_notification
+        ( notificationID,userID)
+        values (#{notificationid},#{userid})
+    </insert>
+    <insert id="insertSelective">
+        insert into received_notification
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="notificationid != null">notificationID,</if>
+                <if test="userid != null">userID,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="notificationid != null">#{notificationid},</if>
+                <if test="userid != null">#{userid},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.model.ReceivedNotification">
+        update received_notification
+        <set>
+        </set>
+        where   notificationID = #{notificationid} AND userID = #{userid} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.demo.model.ReceivedNotification">
+        update received_notification
+        set 
+        where   notificationID = #{notificationid} AND userID = #{userid} 
+    </update>
+</mapper>

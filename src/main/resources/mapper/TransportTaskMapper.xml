@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.TransportTaskMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.demo.model.TransportTask">
+            <id property="taskid" column="taskID" />
+            <result property="itemname" column="itemName" />
+            <result property="itemtype" column="itemType" />
+            <result property="priority" column="priority" />
+            <result property="status" column="status" />
+            <result property="createtime" column="createTime" />
+            <result property="completion" column="completion" />
+            <result property="userid" column="userID" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        taskID,itemName,itemType,priority,status,createTime,
+        completion,userID
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from transport_task
+        where  taskID = #{taskid} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from transport_task
+        where  taskID = #{taskid} 
+    </delete>
+    <insert id="insert" keyColumn="taskID" keyProperty="taskid" parameterType="com.example.demo.model.TransportTask" useGeneratedKeys="true">
+        insert into transport_task
+        ( taskID,itemName,itemType,priority,status,createTime,
+        completion,userID)
+        values (#{taskid},#{itemname},#{itemtype},#{priority},#{status},#{createtime},
+        #{completion},#{userid})
+    </insert>
+    <insert id="insertSelective" keyColumn="taskID" keyProperty="taskid" parameterType="com.example.demo.model.TransportTask" useGeneratedKeys="true">
+        insert into transport_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="taskid != null">taskID,</if>
+                <if test="itemname != null">itemName,</if>
+                <if test="itemtype != null">itemType,</if>
+                <if test="priority != null">priority,</if>
+                <if test="status != null">status,</if>
+                <if test="createtime != null">createTime,</if>
+                <if test="completion != null">completion,</if>
+                <if test="userid != null">userID,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="taskid != null">#{taskid},</if>
+                <if test="itemname != null">#{itemname},</if>
+                <if test="itemtype != null">#{itemtype},</if>
+                <if test="priority != null">#{priority},</if>
+                <if test="status != null">#{status},</if>
+                <if test="createtime != null">#{createtime},</if>
+                <if test="completion != null">#{completion},</if>
+                <if test="userid != null">#{userid},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.model.TransportTask">
+        update transport_task
+        <set>
+                <if test="itemname != null">
+                    itemName = #{itemname},
+                </if>
+                <if test="itemtype != null">
+                    itemType = #{itemtype},
+                </if>
+                <if test="priority != null">
+                    priority = #{priority},
+                </if>
+                <if test="status != null">
+                    status = #{status},
+                </if>
+                <if test="createtime != null">
+                    createTime = #{createtime},
+                </if>
+                <if test="completion != null">
+                    completion = #{completion},
+                </if>
+                <if test="userid != null">
+                    userID = #{userid},
+                </if>
+        </set>
+        where   taskID = #{taskid} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.demo.model.TransportTask">
+        update transport_task
+        set 
+            itemName =  #{itemname},
+            itemType =  #{itemtype},
+            priority =  #{priority},
+            status =  #{status},
+            createTime =  #{createtime},
+            completion =  #{completion},
+            userID =  #{userid}
+        where   taskID = #{taskid} 
+    </update>
+</mapper>
