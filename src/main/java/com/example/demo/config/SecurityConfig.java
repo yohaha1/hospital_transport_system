@@ -3,7 +3,6 @@ package com.example.demo.config;
 import com.example.demo.filter.JwtAuthenticationFilter;
 import com.example.demo.security.JwtAuthenticationEntryPoint;
 import com.example.demo.service.impl.CustomUserDetailsService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +23,7 @@ import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Autowired
