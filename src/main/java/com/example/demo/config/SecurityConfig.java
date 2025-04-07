@@ -1,16 +1,16 @@
 package com.example.demo.config;
 
-import com.example.demo.security.JwtAuthenticationFilter;
+import com.example.demo.filter.JwtAuthenticationFilter;
 import com.example.demo.security.JwtAuthenticationEntryPoint;
-import com.example.demo.service.impl.JwtUserDetailsService;
+import com.example.demo.service.impl.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,25 +23,30 @@ import org.springframework.web.cors.CorsConfiguration;
 import java.util.List;
 
 @Configuration
-@RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtUserDetailsService jwtUserDetailsService;
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
+    @Autowired
+    private JwtAuthenticationEntryPoint unauthorizedHandler;
 
     // 1. 配置认证管理器
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
+    public AuthenticationManager authenticationManager() throws Exception {
+        return authenticationProvider()::authenticate;
     }
 
     // 2. 配置认证提供者
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(jwtUserDetailsService);
+        provider.setUserDetailsService(customUserDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
@@ -75,7 +80,7 @@ public class SecurityConfig {
                                 "/v2/api-docs/**"  // 匹配 API 文档路径
                         ).permitAll()
                         // 登录和注册允许匿名访问
-                        .requestMatchers("/user/login").permitAll()
+                        .requestMatchers("/user/add","/user/login").permitAll()
                         // 允许 OPTIONS 请求
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         // 其他请求需要认证
@@ -84,7 +89,7 @@ public class SecurityConfig {
                 // 异常处理
                 .exceptionHandling(exception -> exception
 //                        .accessDeniedHandler(customAccessDeniedHandler) // 处理没有权限访问
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint) // 处理未认证
+                                .authenticationEntryPoint(unauthorizedHandler) // 处理未认证
                 )
                 // 允许跨域
                 .cors(cors -> cors.configurationSource(request -> {

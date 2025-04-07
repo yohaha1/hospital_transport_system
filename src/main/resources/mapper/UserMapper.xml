@@ -38,12 +38,12 @@
         delete from user
         where  userID = #{userid} 
     </delete>
-    <insert id="insert" keyColumn="userID" keyProperty="userid" parameterType="com.example.demo.model.User" useGeneratedKeys="true">
+    <insert id="insert" parameterType="com.example.demo.model.User">
         insert into user
         ( userID,username,password,role,name,contact,
-        departmentID)
+          departmentID)
         values (#{userid},#{username},#{password},#{role},#{name},#{contact},
-        #{departmentid})
+                #{departmentid})
     </insert>
     <insert id="insertSelective" keyColumn="userID" keyProperty="userid" parameterType="com.example.demo.model.User" useGeneratedKeys="true">
         insert into user
@@ -101,4 +101,7 @@
             departmentID =  #{departmentid}
         where   userID = #{userid} 
     </update>
+
+
+
 </mapper>

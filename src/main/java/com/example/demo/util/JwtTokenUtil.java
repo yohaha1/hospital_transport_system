@@ -14,11 +14,9 @@ import jakarta.servlet.http.HttpServletRequest;
 @Component
 public class JwtTokenUtil {
 
-    @Value("${jwt.secret}")
-    private static String jwtSecret;
+    private static final String jwtSecret = "ukc8BDbRigUDaY6pZFfWus2jZWLPHOsdfhgsdgdsgfdf";
 
-    @Value("${jwt.expirationMs}")
-    private int jwtExpirationMs;
+    private final int jwtExpirationMs = 3600000;
 
     private static final String USER_INFO_CLAIM = "user-info";
     public static final String TOKEN_HEADER = "Authorization";
@@ -28,14 +26,11 @@ public class JwtTokenUtil {
     // 根据用户名生成 JWT
     public String generateToken(JwtEntity jwtEntity) {
         return Jwts.builder()
-                //第一部分 JWT头
-                .setHeaderParam("typ", "JWT")
-                .setHeaderParam("alg", "HS256")
-                .setSubject(jwtEntity.getName())                      // 设置 token 主体为用户名
+                .setSubject(jwtEntity.getUserName())                      // 设置 token 主体为用户名
                 .setIssuedAt(new Date())                   // 设置发行时间
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)) // 设置过期时间
-                .claim(USER_INFO_CLAIM, jwtEntity)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret) // 使用 HS512 算法签名
+                .claim("role", jwtEntity.getRole())
+                .signWith(SignatureAlgorithm.HS256, jwtSecret) // 使用 HS512 算法签名
                 .compact();
     }
 
@@ -50,11 +45,11 @@ public class JwtTokenUtil {
 
     // 从 token 中提取用户名
     public String extractUsername(String token) {
-        return Jwts.parser()
+        Claims claims = Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+                .getBody();
+        return claims.getSubject();
     }
 
     // 验证 token 是否有效

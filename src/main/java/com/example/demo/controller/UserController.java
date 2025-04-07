@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.model.User;
 import com.example.demo.payload.LoginRequest;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,4 +20,11 @@ public class UserController {
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         return userService.login(loginRequest.getUsername(),loginRequest.getPassword());
     }
+
+    @PostMapping("/add")
+    public ResponseEntity<?> addUser(@RequestBody User user) {
+        System.out.println(user);
+        return userService.addUser(user);
+    }
+
 }

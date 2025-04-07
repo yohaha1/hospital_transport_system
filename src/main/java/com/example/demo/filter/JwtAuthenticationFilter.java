@@ -1,6 +1,6 @@
 package com.example.demo.filter;
 
-import com.example.demo.service.impl.JwtUserDetailsService;
+import com.example.demo.service.impl.CustomUserDetailsService;
 import com.example.demo.util.JwtTokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
@@ -17,13 +18,14 @@ import java.io.IOException;
 /**
  * JWT 过滤器：检查每个请求的 Authorization 头中的 Bearer Token，验证并设置认证信息
  */
-public class JwtTokenFilter extends OncePerRequestFilter {
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtil jwtTokenUtil;
-    private final JwtUserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
 
     // 构造器注入
-    public JwtTokenFilter(JwtTokenUtil jwtTokenUtil, JwtUserDetailsService userDetailsService) {
+    public JwtAuthenticationFilter(JwtTokenUtil jwtTokenUtil, CustomUserDetailsService userDetailsService) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.userDetailsService = userDetailsService;
     }
@@ -34,18 +36,29 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                     FilterChain chain)
             throws ServletException, IOException {
         String header = request.getHeader("Authorization");
-        System.out.println("1111111111111111111"+header);
+        System.out.println("Authorization Header: " + header);
+
         if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
             String token = header.substring(7);
-            if (JwtTokenUtil.validateToken(token)) {
+            System.out.println("Extracted Token: " + token);
+
+            if (jwtTokenUtil.validateToken(token)) {
                 String username = jwtTokenUtil.extractUsername(token);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                // 构造认证对象
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                // 将认证对象存入 SecurityContext
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                System.out.println("Extracted Username: " + username);
+
+                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                    if (jwtTokenUtil.validateToken(token, userDetails)) {
+                        // 构造认证对象
+                        UsernamePasswordAuthenticationToken authentication =
+                                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        // 将认证对象存入 SecurityContext
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                        System.out.println("Authentication set in SecurityContext for user: " + username);
+                    }
+                }
             }
         }
         chain.doFilter(request, response);
