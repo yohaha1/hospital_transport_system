@@ -37,7 +37,6 @@ public class UserServiceImpl implements UserService {
         try {
             // 使用 AuthenticationManager 进行认证
             System.out.println("Attempting to authenticate user: " + username);
-            System.out.println("Attempting to authenticate password: " + password);
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             username,
