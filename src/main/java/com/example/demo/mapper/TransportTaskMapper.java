@@ -1,6 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.model.TransportTask;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author haha
@@ -8,6 +9,7 @@ import com.example.demo.model.TransportTask;
 * @createDate 2025-04-05 13:16:10
 * @Entity com.example.demo.model.TransportTask
 */
+@Mapper
 public interface TransportTaskMapper {
 
     int deleteByPrimaryKey(Long id);

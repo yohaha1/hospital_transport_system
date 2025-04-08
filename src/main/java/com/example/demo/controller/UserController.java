@@ -25,7 +25,6 @@ public class UserController {
     @PostMapping("/add")
     @PreAuthorize("hasRole('ROLE_manager')")
     public ResponseEntity<?> addUser(@RequestBody User user) {
-        System.out.println(user);
         return userService.addUser(user);
     }
 

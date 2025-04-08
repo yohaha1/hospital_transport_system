@@ -1,6 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.model.LocationRecord;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author haha
@@ -8,6 +9,7 @@ import com.example.demo.model.LocationRecord;
 * @createDate 2025-04-05 13:15:55
 * @Entity com.example.demo.model.LocationRecord
 */
+@Mapper
 public interface LocationRecordMapper {
 
     int deleteByPrimaryKey(Long id);

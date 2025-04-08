@@ -1,6 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.model.ReceivedNotification;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author haha
@@ -8,6 +9,7 @@ import com.example.demo.model.ReceivedNotification;
 * @createDate 2025-04-05 13:16:05
 * @Entity com.example.demo.model.ReceivedNotification
 */
+@Mapper
 public interface ReceivedNotificationMapper {
 
     int deleteByPrimaryKey(Long id);

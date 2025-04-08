@@ -1,6 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.model.TaskNode;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author haha
@@ -8,6 +9,7 @@ import com.example.demo.model.TaskNode;
 * @createDate 2025-04-05 13:16:08
 * @Entity com.example.demo.model.TaskNode
 */
+@Mapper
 public interface TaskNodeMapper {
 
     int deleteByPrimaryKey(Long id);
