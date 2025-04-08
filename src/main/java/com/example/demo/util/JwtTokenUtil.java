@@ -2,12 +2,12 @@ package com.example.demo.util;
 
 import com.example.demo.model.JwtEntity;
 import io.jsonwebtoken.*;
-import org.springframework.beans.factory.annotation.Value;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
 import java.util.Date;
-import lombok.extern.slf4j.Slf4j;
-import jakarta.servlet.http.HttpServletRequest;
 
 
 @Slf4j
@@ -23,7 +23,6 @@ public class JwtTokenUtil {
 
 //    private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    // 根据用户名生成 JWT
     public String generateToken(JwtEntity jwtEntity) {
         return Jwts.builder()
                 .setSubject(jwtEntity.getUserName())                      // 设置 token 主体为用户名
@@ -34,6 +33,7 @@ public class JwtTokenUtil {
                 .compact();
     }
 
+    // 根据用户名生成 JWT
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
@@ -50,6 +50,15 @@ public class JwtTokenUtil {
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
+    }
+
+    // 从 token 中提取用户ID
+    public Integer getUserIdFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.get("userid", Integer.class);
     }
 
     // 验证 token 是否有效
