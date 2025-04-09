@@ -26,9 +26,4 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new MyUserDetails(user);
     }
 
-    @Transactional
-    public void createUser(User user) {
-        userMapper.insert(user);
-    }
-
 }
