@@ -10,14 +10,15 @@
             <result property="itemtype" column="itemType" />
             <result property="priority" column="priority" />
             <result property="status" column="status" />
+            <result property="note" column="note" />
             <result property="createtime" column="createTime" />
             <result property="completion" column="completion" />
             <result property="userid" column="userID" />
     </resultMap>
 
     <sql id="Base_Column_List">
-        taskID,itemName,itemType,priority,status,createTime,
-        completion,userID
+        taskID,itemName,itemType,priority,status,note,
+        createTime,completion,userID
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -33,10 +34,10 @@
     </delete>
     <insert id="insert" keyColumn="taskID" keyProperty="taskid" parameterType="com.example.demo.model.TransportTask" useGeneratedKeys="true">
         insert into transport_task
-        ( taskID,itemName,itemType,priority,status,createTime,
-        completion,userID)
-        values (#{taskid},#{itemname},#{itemtype},#{priority},#{status},#{createtime},
-        #{completion},#{userid})
+        ( taskID,itemName,itemType,priority,status,note,
+        createTime,completion,userID)
+        values (#{taskid},#{itemname},#{itemtype},#{priority},#{status},#{note},
+        #{createtime},#{completion},#{userid})
     </insert>
     <insert id="insertSelective" keyColumn="taskID" keyProperty="taskid" parameterType="com.example.demo.model.TransportTask" useGeneratedKeys="true">
         insert into transport_task
@@ -46,6 +47,7 @@
                 <if test="itemtype != null">itemType,</if>
                 <if test="priority != null">priority,</if>
                 <if test="status != null">status,</if>
+                <if test="note != null">note,</if>
                 <if test="createtime != null">createTime,</if>
                 <if test="completion != null">completion,</if>
                 <if test="userid != null">userID,</if>
@@ -56,6 +58,7 @@
                 <if test="itemtype != null">#{itemtype},</if>
                 <if test="priority != null">#{priority},</if>
                 <if test="status != null">#{status},</if>
+                <if test="note != null">#{note},</if>
                 <if test="createtime != null">#{createtime},</if>
                 <if test="completion != null">#{completion},</if>
                 <if test="userid != null">#{userid},</if>
@@ -76,6 +79,9 @@
                 <if test="status != null">
                     status = #{status},
                 </if>
+                <if test="note != null">
+                    note = #{note},
+                </if>
                 <if test="createtime != null">
                     createTime = #{createtime},
                 </if>
@@ -95,6 +101,7 @@
             itemType =  #{itemtype},
             priority =  #{priority},
             status =  #{status},
+            note =  #{note},
             createTime =  #{createtime},
             completion =  #{completion},
             userID =  #{userid}

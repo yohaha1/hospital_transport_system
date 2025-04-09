@@ -8,9 +8,14 @@ import lombok.Data;
  */
 @Data
 public class ReceivedNotification {
-
+    /**
+     * 
+     */
     private Integer notificationid;
 
+    /**
+     * 
+     */
     private Integer userid;
 
     public Integer getNotificationid() {

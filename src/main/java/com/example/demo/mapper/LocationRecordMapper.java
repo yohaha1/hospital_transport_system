@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
 * @author haha
 * @description 针对表【location_record(LOCATION_RECORD)】的数据库操作Mapper
-* @createDate 2025-04-05 13:15:55
+* @createDate 2025-04-09 16:40:40
 * @Entity com.example.demo.model.LocationRecord
 */
 @Mapper

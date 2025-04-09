@@ -9,21 +9,49 @@ import lombok.Data;
  */
 @Data
 public class TransportTask {
-
+    /**
+     * 
+     */
     private Integer taskid;
 
+    /**
+     * 
+     */
     private String itemname;
 
+    /**
+     * 
+     */
     private String itemtype;
 
+    /**
+     * 
+     */
     private Integer priority;
 
+    /**
+     * 
+     */
     private String status;
 
+    /**
+     * 
+     */
+    private String note;
+
+    /**
+     * 
+     */
     private Date createtime;
 
+    /**
+     * 
+     */
     private Date completion;
 
+    /**
+     * 
+     */
     private Integer userid;
 
     public Integer getTaskid() {
@@ -64,6 +92,14 @@ public class TransportTask {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public Date getCreatetime() {
@@ -107,6 +143,7 @@ public class TransportTask {
             && (this.getItemtype() == null ? other.getItemtype() == null : this.getItemtype().equals(other.getItemtype()))
             && (this.getPriority() == null ? other.getPriority() == null : this.getPriority().equals(other.getPriority()))
             && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+            && (this.getNote() == null ? other.getNote() == null : this.getNote().equals(other.getNote()))
             && (this.getCreatetime() == null ? other.getCreatetime() == null : this.getCreatetime().equals(other.getCreatetime()))
             && (this.getCompletion() == null ? other.getCompletion() == null : this.getCompletion().equals(other.getCompletion()))
             && (this.getUserid() == null ? other.getUserid() == null : this.getUserid().equals(other.getUserid()));
@@ -121,6 +158,7 @@ public class TransportTask {
         result = prime * result + ((getItemtype() == null) ? 0 : getItemtype().hashCode());
         result = prime * result + ((getPriority() == null) ? 0 : getPriority().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
+        result = prime * result + ((getNote() == null) ? 0 : getNote().hashCode());
         result = prime * result + ((getCreatetime() == null) ? 0 : getCreatetime().hashCode());
         result = prime * result + ((getCompletion() == null) ? 0 : getCompletion().hashCode());
         result = prime * result + ((getUserid() == null) ? 0 : getUserid().hashCode());
@@ -138,6 +176,7 @@ public class TransportTask {
         sb.append(", itemtype=").append(itemtype);
         sb.append(", priority=").append(priority);
         sb.append(", status=").append(status);
+        sb.append(", note=").append(note);
         sb.append(", createtime=").append(createtime);
         sb.append(", completion=").append(completion);
         sb.append(", userid=").append(userid);

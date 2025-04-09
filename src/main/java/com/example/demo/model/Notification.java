@@ -9,17 +9,34 @@ import lombok.Data;
  */
 @Data
 public class Notification {
-
+    /**
+     * 
+     */
     private Integer notificationid;
 
+    /**
+     * 
+     */
     private Integer taskid;
 
+    /**
+     * 
+     */
     private Integer recipientid;
 
+    /**
+     * 
+     */
     private String notificationtype;
 
+    /**
+     * 
+     */
     private String message;
 
+    /**
+     * 
+     */
     private Date sendtime;
 
     public Integer getNotificationid() {

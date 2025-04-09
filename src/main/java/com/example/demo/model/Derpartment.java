@@ -8,13 +8,24 @@ import lombok.Data;
  */
 @Data
 public class Derpartment {
-
+    /**
+     * 
+     */
     private Integer departmentid;
 
+    /**
+     * 
+     */
     private String departmentname;
 
+    /**
+     * 
+     */
     private String address;
 
+    /**
+     * 
+     */
     private String qrcode;
 
     public Integer getDepartmentid() {

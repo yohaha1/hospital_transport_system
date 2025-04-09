@@ -26,24 +26,23 @@
         where  userID = #{userid} 
     </select>
 
-    <!-- 根据用户名查询用户 -->
+    <!--  根据用户名查询用户  -->
     <select id="selectByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List" />
-        from user
-        where username = #{username}
+        <include refid="Base_Column_List"/>
+        from user where username = #{username}
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from user
         where  userID = #{userid} 
     </delete>
-    <insert id="insert" parameterType="com.example.demo.model.User">
+    <insert id="insert" keyColumn="userID" keyProperty="userid" parameterType="com.example.demo.model.User" useGeneratedKeys="true">
         insert into user
         ( userID,username,password,role,name,contact,
-          departmentID)
+        departmentID)
         values (#{userid},#{username},#{password},#{role},#{name},#{contact},
-                #{departmentid})
+        #{departmentid})
     </insert>
     <insert id="insertSelective" keyColumn="userID" keyProperty="userid" parameterType="com.example.demo.model.User" useGeneratedKeys="true">
         insert into user
@@ -101,7 +100,4 @@
             departmentID =  #{departmentid}
         where   userID = #{userid} 
     </update>
-
-
-
 </mapper>

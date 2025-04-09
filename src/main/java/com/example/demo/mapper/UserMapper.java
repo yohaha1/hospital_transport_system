@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
 * @author haha
 * @description 针对表【user(USER)】的数据库操作Mapper
-* @createDate 2025-04-05 12:59:23
+* @createDate 2025-04-09 16:40:20
 * @Entity com.example.demo.model.User
 */
 @Mapper

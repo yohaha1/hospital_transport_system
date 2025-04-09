@@ -9,15 +9,29 @@ import lombok.Data;
  */
 @Data
 public class LocationRecord {
-
+    /**
+     * 
+     */
     private Integer recordid;
 
+    /**
+     * 
+     */
     private Integer taskid;
 
+    /**
+     * 
+     */
     private Integer userid;
 
+    /**
+     * 
+     */
     private String location;
 
+    /**
+     * 
+     */
     private Date timestamp;
 
     public Integer getRecordid() {

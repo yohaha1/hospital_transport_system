@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
 * @author haha
 * @description 针对表【task_node(TASK_NODE)】的数据库操作Mapper
-* @createDate 2025-04-05 13:16:08
+* @createDate 2025-04-09 16:40:40
 * @Entity com.example.demo.model.TaskNode
 */
 @Mapper
