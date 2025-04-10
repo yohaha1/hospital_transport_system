@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.FileInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.demo.model.FileInfo">
+            <id property="fileid" column="fileID" />
+            <result property="taskid" column="taskID" />
+            <result property="filename" column="fileName" />
+            <result property="filepath" column="filePath" />
+            <result property="filetype" column="fileType" />
+            <result property="stage" column="stage" />
+            <result property="uploadtime" column="uploadTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        fileID,taskID,fileName,filePath,fileType,stage,
+        uploadTime
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from file_info
+        where  fileID = #{fileid} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from file_info
+        where  fileID = #{fileid} 
+    </delete>
+    <insert id="insert" keyColumn="fileID" keyProperty="fileid" parameterType="com.example.demo.model.FileInfo" useGeneratedKeys="true">
+        insert into file_info
+        ( fileID,taskID,fileName,filePath,fileType,stage,
+        uploadTime)
+        values (#{fileid},#{taskid},#{filename},#{filepath},#{filetype},#{stage},
+        #{uploadtime})
+    </insert>
+    <insert id="insertSelective" keyColumn="fileID" keyProperty="fileid" parameterType="com.example.demo.model.FileInfo" useGeneratedKeys="true">
+        insert into file_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="fileid != null">fileID,</if>
+                <if test="taskid != null">taskID,</if>
+                <if test="filename != null">fileName,</if>
+                <if test="filepath != null">filePath,</if>
+                <if test="filetype != null">fileType,</if>
+                <if test="stage != null">stage,</if>
+                <if test="uploadtime != null">uploadTime,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="fileid != null">#{fileid},</if>
+                <if test="taskid != null">#{taskid},</if>
+                <if test="filename != null">#{filename},</if>
+                <if test="filepath != null">#{filepath},</if>
+                <if test="filetype != null">#{filetype},</if>
+                <if test="stage != null">#{stage},</if>
+                <if test="uploadtime != null">#{uploadtime},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.model.FileInfo">
+        update file_info
+        <set>
+                <if test="taskid != null">
+                    taskID = #{taskid},
+                </if>
+                <if test="filename != null">
+                    fileName = #{filename},
+                </if>
+                <if test="filepath != null">
+                    filePath = #{filepath},
+                </if>
+                <if test="filetype != null">
+                    fileType = #{filetype},
+                </if>
+                <if test="stage != null">
+                    stage = #{stage},
+                </if>
+                <if test="uploadtime != null">
+                    uploadTime = #{uploadtime},
+                </if>
+        </set>
+        where   fileID = #{fileid} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.demo.model.FileInfo">
+        update file_info
+        set 
+            taskID =  #{taskid},
+            fileName =  #{filename},
+            filePath =  #{filepath},
+            fileType =  #{filetype},
+            stage =  #{stage},
+            uploadTime =  #{uploadtime}
+        where   fileID = #{fileid} 
+    </update>
+</mapper>
