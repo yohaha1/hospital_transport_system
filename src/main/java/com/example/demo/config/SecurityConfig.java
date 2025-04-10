@@ -81,7 +81,7 @@ public class SecurityConfig {
                                 "/v2/api-docs/**"  // 匹配 API 文档路径
                         ).permitAll()
                         // 登录和注册允许匿名访问
-                        .requestMatchers("/user/add","/user/login").permitAll()
+                        .requestMatchers("/user/login").permitAll()
                         // 允许 OPTIONS 请求
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         // 其他请求需要认证

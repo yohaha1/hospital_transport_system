@@ -19,7 +19,7 @@ public class TaskController {
     private TaskService taskService;
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('DOCTOR')")
+    @PreAuthorize("hasRole('ROLE_doctor')")
     public ResponseEntity<?> createTask(
             @RequestPart("task") TransportTask task,
             @RequestPart("nodes") List<TaskNode> nodes,

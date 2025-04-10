@@ -38,19 +38,27 @@ public class TaskServiceImpl implements TaskService {
             // 设置任务创建时间和用户ID
             task.setCreatetime(new Date());
             task.setUserid(userId);
-
             transportTaskMapper.insert(task);
+            System.out.println("创建任务成功： " + task.getTaskid());
 
             // 设置每个节点的任务ID和顺序
-            for (int i = 0; i < nodes.size(); i++) {
-                TaskNode node = nodes.get(i);
-                node.setTaskid(task.getTaskid());
-                node.setSequence(i + 1);
-                taskNodeMapper.insert(node);
+            if (nodes != null && !nodes.isEmpty()) {
+                for (int i = 0; i < nodes.size(); i++) {
+                    TaskNode node = nodes.get(i);
+
+                    // 设置任务ID和节点顺序
+                    node.setTaskid(task.getTaskid());
+                    node.setSequence(i + 1);
+
+                    // 插入节点数据到数据库
+                    taskNodeMapper.insert(node);
+                }
+            } else {
+                throw new IllegalArgumentException("Nodes list cannot be null or empty");
             }
 
             //保存附件
-            String uploadDir = "uploads/tasks/" + task.getTaskid() ;
+            String uploadDir = "resources/tasks/" + task.getTaskid() ;
             File uploadDirFile = new File(uploadDir);
             if(!uploadDirFile.exists()){
                 uploadDirFile.mkdirs();
@@ -77,7 +85,8 @@ public class TaskServiceImpl implements TaskService {
 
             return ResponseEntity.ok("Task and files created successfully");
         } catch (IOException ex) {
-            return ResponseEntity.status(500).body("File upload failed");
+            System.out.println("没有文件");
+            return ResponseEntity.status(200).body("File upload failed");
         } catch (Exception ex) {
             return ResponseEntity.status(500).body("Internal Server Error");
         }
