@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,14 +20,10 @@ public class TaskController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('DOCTOR')")
-    public ResponseEntity<?> createTask(@RequestBody TransportTask task, @RequestBody List<TaskNode> nodes) {
-        try {
-            taskService.createTask(task, nodes);
-            return ResponseEntity.ok("Task created successfully");
-        } catch (SecurityException e) {
-            return ResponseEntity.status(403).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Internal Server Error");
-        }
+    public ResponseEntity<?> createTask(
+            @RequestPart("task") TransportTask task,
+            @RequestPart("nodes") List<TaskNode> nodes,
+            @RequestPart("files") List<MultipartFile> files) {
+        return taskService.createTask(task, nodes, files);
     }
 }
