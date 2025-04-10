@@ -1,7 +1,7 @@
 server:
-port: 8080
-servlet:
-context-path: /
+  port: 8080
+  servlet:
+    context-path: /
 
 spring:
   datasource:
@@ -9,19 +9,23 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    org.hibernate.dialect.MySQL8Dialect
 
-mybatis:
-  mapper-locations: classpath:/mapper/*.xml
-  type-aliases-package: com.example.demo.model
-  configuration:
-    #下划线转驼峰
-    map-underscore-to-camel-case: true
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect  # 指定 Hibernate 的 MySQL 8 方言
+    hibernate:
+      ddl-auto: update  # 自动更新数据库表结构（根据项目需求调整为 none, update, create-drop 等）
+  devtools:
+    restart:
+      additional-paths: src/main/java
+      enabled: true
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml  # 扫描所有的 XML 映射文件
   type-aliases-package: com.example.demo.model  # 扫描实体类包
+  configuration:
+    map-underscore-to-camel-case: true  # 下划线转驼峰
   global-config:
     db-config:
-      id-type: auto  # 主键自增策略，通常是自增长
-
+      id-type: auto  # 主键自增策略

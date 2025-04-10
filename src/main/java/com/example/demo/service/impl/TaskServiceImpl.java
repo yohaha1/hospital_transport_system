@@ -5,7 +5,6 @@ import com.example.demo.mapper.TransportTaskMapper;
 import com.example.demo.model.TaskNode;
 import com.example.demo.model.TransportTask;
 import com.example.demo.service.TaskService;
-import com.example.demo.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,14 +21,11 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private TaskNodeMapper taskNodeMapper;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
     @Override
-    public ResponseEntity<String> createTask(TransportTask task, List<TaskNode> nodes, String token) {
+    public ResponseEntity<String> createTask(TransportTask task, List<TaskNode> nodes) {
         try {
             // 从 JWT token 获取用户ID
-            Integer userId = jwtTokenUtil.getUserIdFromToken(token);
+            Integer userId = task.getUserid();
 
             // 设置任务创建时间和用户ID
             task.setCreatetime(new Date());

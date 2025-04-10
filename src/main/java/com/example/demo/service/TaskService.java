@@ -9,6 +9,6 @@ import java.util.List;
 
 @Service
 public interface TaskService{
-    ResponseEntity<String> createTask(TransportTask task, List<TaskNode> nodes, String token);
+    ResponseEntity<String> createTask(TransportTask task, List<TaskNode> nodes);
 
 }

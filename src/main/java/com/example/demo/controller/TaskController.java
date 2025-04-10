@@ -19,9 +19,9 @@ public class TaskController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('DOCTOR')")
-    public ResponseEntity<?> createTask(@RequestBody TransportTask task, @RequestBody List<TaskNode> nodes, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> createTask(@RequestBody TransportTask task, @RequestBody List<TaskNode> nodes) {
         try {
-            taskService.createTask(task, nodes, token);
+            taskService.createTask(task, nodes);
             return ResponseEntity.ok("Task created successfully");
         } catch (SecurityException e) {
             return ResponseEntity.status(403).body(e.getMessage());
