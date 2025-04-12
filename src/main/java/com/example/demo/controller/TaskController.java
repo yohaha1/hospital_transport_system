@@ -20,10 +20,58 @@ public class TaskController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_doctor')")
-    public ResponseEntity<?> createTask(
+    public ResponseEntity<String> createTask(
             @RequestPart("task") TransportTask task,
             @RequestPart("nodes") List<TaskNode> nodes,
             @RequestPart("files") List<MultipartFile> files) {
-        return taskService.createTask(task, nodes, files);
+        try {
+            taskService.createTask(task, nodes, files);
+            return ResponseEntity.ok("Task and files created successfully");
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body("Invalid input: " + ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body("Internal Server Error: " + ex.getMessage());
+        }
     }
+
+    @GetMapping("/search/pending")
+    @PreAuthorize("hasRole('ROLE_transporter')")
+    public ResponseEntity<List<TransportTask>> getPendingTasks() {
+        try {
+            List<TransportTask> pendingTasks = taskService.getPendingTasks();
+            return ResponseEntity.ok(pendingTasks);
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @PostMapping("/accept/{taskId}")
+    @PreAuthorize("hasRole('ROLE_transporter')")
+    public ResponseEntity<String> acceptTask(@PathVariable("taskId") int taskId,
+                                             @RequestParam("transporterId") int transporterId){
+        try{
+            taskService.acceptTask(taskId, transporterId);
+            return ResponseEntity.ok("接单成功！");
+        }catch (IllegalArgumentException ex){
+            return ResponseEntity.badRequest().body("无效输入 " + ex.getMessage());
+        }catch (Exception ex){
+            return ResponseEntity.status(500).body("出错了！" + ex.getMessage());
+        }
+    }
+
+    @PostMapping("/start/{taskId}")
+    @PreAuthorize("hasRole('ROLE_transporter')")
+    public ResponseEntity<String> startTask(@PathVariable("taskId") int taskId,
+                                            @RequestParam("transporterId")int transporterId,
+                                            @RequestPart("file") MultipartFile file){
+        try{
+            taskService.startTask(taskId,transporterId,file);
+            return ResponseEntity.ok("任务开始！");
+        }catch (IllegalArgumentException ex){
+            return ResponseEntity.badRequest().body("无效输入: " + ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body("出错了！" + ex.getMessage());
+        }
+    }
+
 }

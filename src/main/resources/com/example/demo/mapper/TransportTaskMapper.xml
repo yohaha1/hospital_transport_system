@@ -13,12 +13,13 @@
             <result property="note" column="note" />
             <result property="createtime" column="createTime" />
             <result property="completion" column="completion" />
-            <result property="userid" column="userID" />
+            <result property="docid" column="docID" />
+            <result property="transid" column="transID" />
     </resultMap>
 
     <sql id="Base_Column_List">
         taskID,itemName,itemType,priority,status,note,
-        createTime,completion,userID
+        createTime,completion,docID,transID
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -35,9 +36,9 @@
     <insert id="insert" keyColumn="taskID" keyProperty="taskid" parameterType="com.example.demo.model.TransportTask" useGeneratedKeys="true">
         insert into transport_task
         ( taskID,itemName,itemType,priority,status,note,
-        createTime,completion,userID)
+        createTime,completion,docID,transID)
         values (#{taskid},#{itemname},#{itemtype},#{priority},#{status},#{note},
-        #{createtime},#{completion},#{userid})
+        #{createtime},#{completion},#{docid},#{transid})
     </insert>
     <insert id="insertSelective" keyColumn="taskID" keyProperty="taskid" parameterType="com.example.demo.model.TransportTask" useGeneratedKeys="true">
         insert into transport_task
@@ -50,7 +51,8 @@
                 <if test="note != null">note,</if>
                 <if test="createtime != null">createTime,</if>
                 <if test="completion != null">completion,</if>
-                <if test="userid != null">userID,</if>
+                <if test="docid != null">docID,</if>
+                <if test="transid != null">transID,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 <if test="taskid != null">#{taskid},</if>
@@ -61,7 +63,8 @@
                 <if test="note != null">#{note},</if>
                 <if test="createtime != null">#{createtime},</if>
                 <if test="completion != null">#{completion},</if>
-                <if test="userid != null">#{userid},</if>
+                <if test="docid != null">#{docid},</if>
+                <if test="transid != null">#{transid},</if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.model.TransportTask">
@@ -88,8 +91,11 @@
                 <if test="completion != null">
                     completion = #{completion},
                 </if>
-                <if test="userid != null">
-                    userID = #{userid},
+                <if test="docid != null">
+                    docID = #{docid},
+                </if>
+                <if test="transid != null">
+                    transID = #{transid},
                 </if>
         </set>
         where   taskID = #{taskid} 
@@ -104,7 +110,14 @@
             note =  #{note},
             createTime =  #{createtime},
             completion =  #{completion},
-            userID =  #{userid}
+            docID =  #{docid},
+            transID =  #{transid}
         where   taskID = #{taskid} 
     </update>
+
+<!--    -->
+    <select id="getPendingTasks" resultMap="BaseResultMap">
+        SELECT * FROM transport_task WHERE status = 'NEW'
+    </select>
+
 </mapper>

@@ -32,7 +32,7 @@ public class TransportTask {
     /**
      * 
      */
-    private String status;
+    private Object status;
 
     /**
      * 
@@ -52,79 +52,12 @@ public class TransportTask {
     /**
      * 
      */
-    private Integer userid;
+    private Integer docid;
 
-    public Integer getTaskid() {
-        return taskid;
-    }
-
-    public void setTaskid(Integer taskid) {
-        this.taskid = taskid;
-    }
-
-    public String getItemname() {
-        return itemname;
-    }
-
-    public void setItemname(String itemname) {
-        this.itemname = itemname;
-    }
-
-    public String getItemtype() {
-        return itemtype;
-    }
-
-    public void setItemtype(String itemtype) {
-        this.itemtype = itemtype;
-    }
-
-    public Integer getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public Date getCreatetime() {
-        return createtime;
-    }
-
-    public void setCreatetime(Date createtime) {
-        this.createtime = createtime;
-    }
-
-    public Date getCompletion() {
-        return completion;
-    }
-
-    public void setCompletion(Date completion) {
-        this.completion = completion;
-    }
-
-    public Integer getUserid() {
-        return userid;
-    }
-
-    public void setUserid(Integer userid) {
-        this.userid = userid;
-    }
+    /**
+     * 
+     */
+    private Integer transid;
 
     @Override
     public boolean equals(Object that) {
@@ -146,7 +79,8 @@ public class TransportTask {
             && (this.getNote() == null ? other.getNote() == null : this.getNote().equals(other.getNote()))
             && (this.getCreatetime() == null ? other.getCreatetime() == null : this.getCreatetime().equals(other.getCreatetime()))
             && (this.getCompletion() == null ? other.getCompletion() == null : this.getCompletion().equals(other.getCompletion()))
-            && (this.getUserid() == null ? other.getUserid() == null : this.getUserid().equals(other.getUserid()));
+            && (this.getDocid() == null ? other.getDocid() == null : this.getDocid().equals(other.getDocid()))
+            && (this.getTransid() == null ? other.getTransid() == null : this.getTransid().equals(other.getTransid()));
     }
 
     @Override
@@ -161,7 +95,8 @@ public class TransportTask {
         result = prime * result + ((getNote() == null) ? 0 : getNote().hashCode());
         result = prime * result + ((getCreatetime() == null) ? 0 : getCreatetime().hashCode());
         result = prime * result + ((getCompletion() == null) ? 0 : getCompletion().hashCode());
-        result = prime * result + ((getUserid() == null) ? 0 : getUserid().hashCode());
+        result = prime * result + ((getDocid() == null) ? 0 : getDocid().hashCode());
+        result = prime * result + ((getTransid() == null) ? 0 : getTransid().hashCode());
         return result;
     }
 
@@ -179,7 +114,8 @@ public class TransportTask {
         sb.append(", note=").append(note);
         sb.append(", createtime=").append(createtime);
         sb.append(", completion=").append(completion);
-        sb.append(", userid=").append(userid);
+        sb.append(", docid=").append(docid);
+        sb.append(", transid=").append(transid);
         sb.append("]");
         return sb.toString();
     }

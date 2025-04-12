@@ -3,10 +3,12 @@ package com.example.demo.mapper;
 import com.example.demo.model.TransportTask;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
 * @author haha
 * @description 针对表【transport_task(TRANSPORT_TASK)】的数据库操作Mapper
-* @createDate 2025-04-09 16:40:40
+* @createDate 2025-04-12 14:47:52
 * @Entity com.example.demo.model.TransportTask
 */
 @Mapper
@@ -23,5 +25,7 @@ public interface TransportTaskMapper {
     int updateByPrimaryKeySelective(TransportTask record);
 
     int updateByPrimaryKey(TransportTask record);
+
+    List<TransportTask> getPendingTasks();
 
 }

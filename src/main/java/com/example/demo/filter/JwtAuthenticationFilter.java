@@ -36,15 +36,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain chain)
             throws ServletException, IOException {
         String header = request.getHeader("Authorization");
-        System.out.println("Authorization Header: " + header);
+//        System.out.println("Authorization Header: " + header);
 
         if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
             String token = header.substring(7);
-            System.out.println("Extracted Token: " + token);
+//            System.out.println("Extracted Token: " + token);
 
-            if (jwtTokenUtil.validateToken(token)) {
+            if (JwtTokenUtil.validateToken(token)) {
                 String username = jwtTokenUtil.extractUsername(token);
-                System.out.println("Extracted Username: " + username);
+                System.out.println("jwt已验证: " + username);
 
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -56,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         // 将认证对象存入 SecurityContext
                         SecurityContextHolder.getContext().setAuthentication(authentication);
-                        System.out.println("Authentication set in SecurityContext for user: " + username);
+                        System.out.println("保存认证信息  " + username);
                     }
                 }
             }

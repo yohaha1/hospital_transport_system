@@ -65,4 +65,13 @@
             handoverTime =  #{handovertime}
         where   taskID = #{taskid} AND departmentID = #{departmentid} 
     </update>
+
+<!--    -->
+    <!-- 查询任务节点 -->
+    <select id="selectByTaskIdAndSequence" parameterType="com.example.demo.model.TaskNode" resultMap="BaseResultMap">
+        SELECT *
+        FROM task_node
+        WHERE taskID = #{taskId} AND sequence = #{sequence}
+    </select>
+
 </mapper>

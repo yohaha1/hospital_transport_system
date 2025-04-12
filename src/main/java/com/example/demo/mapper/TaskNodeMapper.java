@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
 * @author haha
 * @description 针对表【task_node(TASK_NODE)】的数据库操作Mapper
-* @createDate 2025-04-09 16:40:40
+* @createDate 2025-04-12 19:28:58
 * @Entity com.example.demo.model.TaskNode
 */
 @Mapper
@@ -24,4 +24,5 @@ public interface TaskNodeMapper {
 
     int updateByPrimaryKey(TaskNode record);
 
+    TaskNode selectByTaskIdAndSequence(int taskId, int sequence);
 }
