@@ -4,10 +4,10 @@ import lombok.Data;
 
 /**
  * DERPARTMENT
- * @TableName derpartment
+ * @TableName department
  */
 @Data
-public class Derpartment {
+public class Department {
     /**
      * 
      */
@@ -28,38 +28,6 @@ public class Derpartment {
      */
     private String qrcode;
 
-    public Integer getDepartmentid() {
-        return departmentid;
-    }
-
-    public void setDepartmentid(Integer departmentid) {
-        this.departmentid = departmentid;
-    }
-
-    public String getDepartmentname() {
-        return departmentname;
-    }
-
-    public void setDepartmentname(String departmentname) {
-        this.departmentname = departmentname;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getQrcode() {
-        return qrcode;
-    }
-
-    public void setQrcode(String qrcode) {
-        this.qrcode = qrcode;
-    }
-
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -71,7 +39,7 @@ public class Derpartment {
         if (getClass() != that.getClass()) {
             return false;
         }
-        Derpartment other = (Derpartment) that;
+        Department other = (Department) that;
         return (this.getDepartmentid() == null ? other.getDepartmentid() == null : this.getDepartmentid().equals(other.getDepartmentid()))
             && (this.getDepartmentname() == null ? other.getDepartmentname() == null : this.getDepartmentname().equals(other.getDepartmentname()))
             && (this.getAddress() == null ? other.getAddress() == null : this.getAddress().equals(other.getAddress()))

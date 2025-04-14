@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.model.TaskNode;
 import com.example.demo.model.TransportTask;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,4 +17,6 @@ public interface TaskService{
     void acceptTask(int taskId, int transporterId);
 
     void startTask(int taskId, int transporterId, MultipartFile file);
+
+    void handOverTask(int taskId, int transporterId, int departmentId, MultipartFile file);
 }

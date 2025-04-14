@@ -74,4 +74,20 @@ public class TaskController {
         }
     }
 
+    @PostMapping("/handover/{taskId}")
+    @PreAuthorize("hasRole('ROLE_transporter')")
+    public ResponseEntity<String> handOverTask(@PathVariable("taskId") int taskId,
+                                               @RequestParam("transporterId") int transporterId,
+                                               @RequestParam("departmentId") int departmentId,
+                                               @RequestPart("file") MultipartFile file){
+        try{
+            taskService.handOverTask(taskId,transporterId,departmentId,file);
+            return ResponseEntity.ok("任务交接成功！");
+        }catch (IllegalArgumentException ex){
+            return ResponseEntity.badRequest().body("无效输入: " + ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body("出错了！" + ex.getMessage());
+        }
+    }
+
 }

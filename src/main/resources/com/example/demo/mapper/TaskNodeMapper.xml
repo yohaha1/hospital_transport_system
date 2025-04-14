@@ -67,11 +67,26 @@
     </update>
 
 <!--    -->
-    <!-- 查询任务节点 -->
+    <!-- 根据id和序列查询任务节点 -->
     <select id="selectByTaskIdAndSequence" parameterType="com.example.demo.model.TaskNode" resultMap="BaseResultMap">
         SELECT *
         FROM task_node
         WHERE taskID = #{taskId} AND sequence = #{sequence}
+    </select>
+
+    <!-- 根据id和部门查询任务节点 -->
+    <select id="selectByTaskIdAndDepartmentId" parameterType="com.example.demo.model.TaskNode" resultMap="BaseResultMap">
+        SELECT *
+        FROM task_node
+        WHERE taskID = #{taskId} AND departmentID = #{departmentId}
+    </select>
+
+<!--    根据id查询-->
+    <select id="selectByTaskId"  parameterType="com.example.demo.model.TaskNode" resultMap="BaseResultMap">
+        SELECT *
+        FROM task_node
+        WHERE taskID = #{taskId}
+        ORDER BY sequence ASC
     </select>
 
 </mapper>

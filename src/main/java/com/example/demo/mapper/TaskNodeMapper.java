@@ -3,6 +3,8 @@ package com.example.demo.mapper;
 import com.example.demo.model.TaskNode;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
 * @author haha
 * @description 针对表【task_node(TASK_NODE)】的数据库操作Mapper
@@ -25,4 +27,8 @@ public interface TaskNodeMapper {
     int updateByPrimaryKey(TaskNode record);
 
     TaskNode selectByTaskIdAndSequence(int taskId, int sequence);
-}
+
+    TaskNode selectByTaskIdAndDepartmentId(int taskId, int departmentId);
+
+    List<TaskNode> selectByTaskId(int taskId);}
+
