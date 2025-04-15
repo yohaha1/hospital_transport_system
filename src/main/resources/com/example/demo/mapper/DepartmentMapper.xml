@@ -69,4 +69,9 @@
             qrCode =  #{qrcode}
         where   departmentID = #{departmentid} 
     </update>
+
+
+    <select id="getAllDepartmentIds" resultType="java.lang.Integer">
+        select departmentID from department
+    </select>
 </mapper>

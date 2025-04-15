@@ -3,6 +3,8 @@ package com.example.demo.mapper;
 import com.example.demo.model.Department;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
 * @author haha
 * @description 针对表【department(DERPARTMENT)】的数据库操作Mapper
@@ -24,4 +26,5 @@ public interface DepartmentMapper {
 
     int updateByPrimaryKey(Department record);
 
+    List<Integer> getAllDepartmentIds();
 }

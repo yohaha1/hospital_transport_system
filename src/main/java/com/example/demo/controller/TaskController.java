@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.model.TransportTask;
 import com.example.demo.model.TaskNode;
 import com.example.demo.service.TaskService;
+import jakarta.persistence.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -63,9 +64,10 @@ public class TaskController {
     @PreAuthorize("hasRole('ROLE_transporter')")
     public ResponseEntity<String> startTask(@PathVariable("taskId") int taskId,
                                             @RequestParam("transporterId")int transporterId,
-                                            @RequestPart("file") MultipartFile file){
+                                            @RequestPart("file") MultipartFile file,
+                                            @RequestParam("qrCodeData") String qrCodeData){
         try{
-            taskService.startTask(taskId,transporterId,file);
+            taskService.startTask(taskId,transporterId,file,qrCodeData);
             return ResponseEntity.ok("任务开始！");
         }catch (IllegalArgumentException ex){
             return ResponseEntity.badRequest().body("无效输入: " + ex.getMessage());
@@ -79,9 +81,10 @@ public class TaskController {
     public ResponseEntity<String> handOverTask(@PathVariable("taskId") int taskId,
                                                @RequestParam("transporterId") int transporterId,
                                                @RequestParam("departmentId") int departmentId,
-                                               @RequestPart("file") MultipartFile file){
+                                               @RequestPart("file") MultipartFile file,
+                                               @RequestParam("qrCodeData") String qrCodeData){
         try{
-            taskService.handOverTask(taskId,transporterId,departmentId,file);
+            taskService.handOverTask(taskId,transporterId,departmentId,file, qrCodeData);
             return ResponseEntity.ok("任务交接成功！");
         }catch (IllegalArgumentException ex){
             return ResponseEntity.badRequest().body("无效输入: " + ex.getMessage());
