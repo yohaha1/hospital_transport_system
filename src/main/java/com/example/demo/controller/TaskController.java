@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.model.TransportTask;
 import com.example.demo.model.TaskNode;
 import com.example.demo.service.TaskService;
-import jakarta.persistence.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -81,7 +80,7 @@ public class TaskController {
     public ResponseEntity<String> handOverTask(@PathVariable("taskId") int taskId,
                                                @RequestParam("transporterId") int transporterId,
                                                @RequestParam("departmentId") int departmentId,
-                                               @RequestPart("file") MultipartFile file,
+                                               @RequestPart(value = "file", required = false) MultipartFile file,
                                                @RequestParam("qrCodeData") String qrCodeData){
         try{
             taskService.handOverTask(taskId,transporterId,departmentId,file, qrCodeData);

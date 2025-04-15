@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ROLE_manager')")
+    @PreAuthorize("hasRole('ROLE_admin')")
     public ResponseEntity<?> addUser(@RequestBody User user) {
         return userService.addUser(user);
     }

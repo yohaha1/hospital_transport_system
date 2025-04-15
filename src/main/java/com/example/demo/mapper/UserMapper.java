@@ -3,6 +3,8 @@ package com.example.demo.mapper;
 import com.example.demo.model.User;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
 * @author haha
 * @description 针对表【user(USER)】的数据库操作Mapper
@@ -27,4 +29,6 @@ public interface UserMapper {
     // 新增通过用户名查询用户的方法
     User selectByUsername(String username);
 
+    List<Integer> findDoctorIdsByDepartmentId(int departmentId);
 }
+

@@ -18,8 +18,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        taskID,itemName,itemType,priority,status,note,
-        createTime,completion,docID,transID
+        taskID, itemName, itemType, priority, status, note,
+        createTime, completion, docID, transID
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -118,6 +118,46 @@
 <!--    -->
     <select id="getPendingTasks" resultMap="BaseResultMap">
         SELECT * FROM transport_task WHERE status = 'NEW'
+    </select>
+
+    <select id="findByFilters" parameterType="com.example.demo.model.TransportTask" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM transport_task
+        <where>
+            <if test="type != null">itemType = #{type}</if>
+            <if test="startDate != null">AND createTime &gt;= #{startDate}</if>
+            <if test="endDate != null">AND createTime &lt;= #{endDate}</if>
+        </where>
+    </select>
+
+    <select id="findByTransporterAndFilters" parameterType="com.example.demo.model.TransportTask" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM transport_task
+        <where>
+            transID = #{transporterId}
+            <if test="type != null">AND itemType = #{type}</if>
+            <if test="startDate != null">AND createTime &gt;= #{startDate}</if>
+            <if test="endDate != null">AND createTime &lt;= #{endDate}</if>
+        </where>
+    </select>
+
+    <select id="findByDepartmentDoctorIdsAndFilters" parameterType="com.example.demo.model.TransportTask" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM transport_task
+        <where>
+            <if test="doctorIds != null and doctorIds.size() > 0">
+                docID IN
+                <foreach item="id" collection="doctorIds" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="type != null">AND itemType = #{type}</if>
+            <if test="startDate != null">AND createTime &gt;= #{startDate}</if>
+            <if test="endDate != null">AND createTime &lt;= #{endDate}</if>
+        </where>
     </select>
 
 </mapper>

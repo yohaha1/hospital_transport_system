@@ -100,4 +100,11 @@
             departmentID =  #{departmentid}
         where   userID = #{userid} 
     </update>
+
+    <select id="findDoctorIdsByDepartmentId" resultType="java.lang.Integer">
+        SELECT userId
+        FROM user
+        WHERE departmentId = #{departmentId}
+    </select>
+
 </mapper>

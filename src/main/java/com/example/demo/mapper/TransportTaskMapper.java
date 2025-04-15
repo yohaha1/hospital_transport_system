@@ -3,6 +3,7 @@ package com.example.demo.mapper;
 import com.example.demo.model.TransportTask;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,4 +29,9 @@ public interface TransportTaskMapper {
 
     List<TransportTask> getPendingTasks();
 
+    List<TransportTask> findByFilters(String type, Date startDate, Date endDate);
+
+    List<TransportTask> findByTransporterAndFilters(int transporterId,String type, Date startDate, Date endDate);
+
+    List<TransportTask> findByDepartmentDoctorIdsAndFilters(List<Integer> doctorIds, String type, Date startDate, Date endDate);
 }

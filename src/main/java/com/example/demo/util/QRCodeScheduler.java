@@ -32,7 +32,7 @@ public class QRCodeScheduler {
                     String filePath = "D:/project/graduate_project/data/qrCode/department_" + departmentId + ".png";
                     QRCodeGenerator.generateQRCode(content, filePath);
 
-                    System.out.println("已生成部门 " + departmentId + " 的二维码");
+                    System.out.println("已生成部门 " + departmentId + " 的二维码: " + content);
                 } catch (IOException e) {
                     System.err.println("IO 错误：无法生成部门 " + departmentId + " 的二维码。原因: " + e.getMessage());
                 } catch (WriterException e) {

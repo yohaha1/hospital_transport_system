@@ -23,7 +23,6 @@ public class QRCodeGenerator {
 
 
     public static void generateQRCode(String content, String filePath) throws WriterException, IOException {
-        System.out.println("rqqqqqqqqqqqqqqqqqqqqqqqqqqqqq  "+content);
         int width = 300;
         int height = 300;
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
