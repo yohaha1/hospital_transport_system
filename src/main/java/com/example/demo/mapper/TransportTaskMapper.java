@@ -34,4 +34,7 @@ public interface TransportTaskMapper {
     List<TransportTask> findByTransporterAndFilters(int transporterId,String type, Date startDate, Date endDate);
 
     List<TransportTask> findByDepartmentDoctorIdsAndFilters(List<Integer> doctorIds, String type, Date startDate, Date endDate);
+
+    List<TransportTask> getTransportingTasks();
 }
+

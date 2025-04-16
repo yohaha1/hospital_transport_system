@@ -120,6 +120,14 @@
         SELECT * FROM transport_task WHERE status = 'NEW'
     </select>
 
+    <select id="getPendingTasks" resultMap="BaseResultMap">
+        SELECT * FROM transport_task WHERE status = 'TRANSPORTING'
+    </select>
+
+    <select id="getStatusTasks" parameterType="com.example.demo.model.TransportTask" resultMap="BaseResultMap">
+        SELECT * FROM transport_task WHERE status = #{status}
+    </select>
+
     <select id="findByFilters" parameterType="com.example.demo.model.TransportTask" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>

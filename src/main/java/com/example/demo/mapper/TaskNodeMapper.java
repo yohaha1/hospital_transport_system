@@ -30,5 +30,7 @@ public interface TaskNodeMapper {
 
     TaskNode selectByTaskIdAndDepartmentId(int taskId, int departmentId);
 
-    List<TaskNode> selectByTaskId(int taskId);}
+    List<TaskNode> selectByTaskId(int taskId);
+
+}
 
