@@ -28,6 +28,7 @@ public class JwtTokenUtil {
                 .setSubject(jwtEntity.getUserName())                      // 设置 token 主体为用户名
                 .setIssuedAt(new Date())                   // 设置发行时间
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)) // 设置过期时间
+                .claim("id", jwtEntity.getUserId())
                 .claim("role", jwtEntity.getRole())
                 .signWith(SignatureAlgorithm.HS256, jwtSecret) // 使用 HS512 算法签名
                 .compact();

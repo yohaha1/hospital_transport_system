@@ -19,7 +19,7 @@ public class QRCodeScheduler {
         this.departmentMapper = departmentMapper;
     }
 
-    @Scheduled(fixedRate = 120000) // 每两分钟运行一次
+    @Scheduled(fixedRate = 300000) // 每两分钟运行一次
     public void updateQRCode() {
         try {
             List<Integer> departmentIds = departmentMapper.getAllDepartmentIds();

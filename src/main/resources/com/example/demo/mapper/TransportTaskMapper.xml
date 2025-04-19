@@ -1,136 +1,130 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.TransportTaskMapper">
 
-    <resultMap id="BaseResultMap" type="com.example.demo.model.TransportTask">
-            <id property="taskid" column="taskID" />
-            <result property="itemname" column="itemName" />
-            <result property="itemtype" column="itemType" />
-            <result property="priority" column="priority" />
-            <result property="status" column="status" />
-            <result property="note" column="note" />
-            <result property="createtime" column="createTime" />
-            <result property="completion" column="completion" />
-            <result property="docid" column="docID" />
-            <result property="transid" column="transID" />
-    </resultMap>
-
+    <!-- 定义可复用的列名列表 -->
     <sql id="Base_Column_List">
         taskID, itemName, itemType, priority, status, note,
         createTime, completion, docID, transID
     </sql>
 
+    <!-- 定义结果映射 -->
+    <resultMap id="BaseResultMap" type="com.example.demo.model.TransportTask">
+        <id property="taskid" column="taskID" />
+        <result property="itemname" column="itemName" />
+        <result property="itemtype" column="itemType" />
+        <result property="priority" column="priority" />
+        <result property="status" column="status" />
+        <result property="note" column="note" />
+        <result property="createtime" column="createTime" />
+        <result property="completion" column="completion" />
+        <result property="docid" column="docID" />
+        <result property="transid" column="transID" />
+    </resultMap>
+
+    <!-- 查询任务（根据主键） -->
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select
+        SELECT
         <include refid="Base_Column_List" />
-        from transport_task
-        where  taskID = #{taskid} 
+        FROM transport_task
+        WHERE taskID = #{taskid}
     </select>
 
+    <!-- 删除任务（根据主键） -->
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete from transport_task
-        where  taskID = #{taskid} 
+        DELETE FROM transport_task
+        WHERE taskID = #{taskid}
     </delete>
+
+    <!-- 插入任务 -->
     <insert id="insert" keyColumn="taskID" keyProperty="taskid" parameterType="com.example.demo.model.TransportTask" useGeneratedKeys="true">
-        insert into transport_task
-        ( taskID,itemName,itemType,priority,status,note,
-        createTime,completion,docID,transID)
-        values (#{taskid},#{itemname},#{itemtype},#{priority},#{status},#{note},
-        #{createtime},#{completion},#{docid},#{transid})
+        INSERT INTO transport_task
+        (taskID, itemName, itemType, priority, status, note,
+         createTime, completion, docID, transID)
+        VALUES (#{taskid}, #{itemname}, #{itemtype}, #{priority}, #{status}, #{note},
+                #{createtime}, #{completion}, #{docid}, #{transid})
     </insert>
+
+    <!-- 动态插入任务 -->
     <insert id="insertSelective" keyColumn="taskID" keyProperty="taskid" parameterType="com.example.demo.model.TransportTask" useGeneratedKeys="true">
-        insert into transport_task
+        INSERT INTO transport_task
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="taskid != null">taskID,</if>
-                <if test="itemname != null">itemName,</if>
-                <if test="itemtype != null">itemType,</if>
-                <if test="priority != null">priority,</if>
-                <if test="status != null">status,</if>
-                <if test="note != null">note,</if>
-                <if test="createtime != null">createTime,</if>
-                <if test="completion != null">completion,</if>
-                <if test="docid != null">docID,</if>
-                <if test="transid != null">transID,</if>
+            <if test="taskid != null">taskID,</if>
+            <if test="itemname != null">itemName,</if>
+            <if test="itemtype != null">itemType,</if>
+            <if test="priority != null">priority,</if>
+            <if test="status != null">status,</if>
+            <if test="note != null">note,</if>
+            <if test="createtime != null">createTime,</if>
+            <if test="completion != null">completion,</if>
+            <if test="docid != null">docID,</if>
+            <if test="transid != null">transID,</if>
         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="taskid != null">#{taskid},</if>
-                <if test="itemname != null">#{itemname},</if>
-                <if test="itemtype != null">#{itemtype},</if>
-                <if test="priority != null">#{priority},</if>
-                <if test="status != null">#{status},</if>
-                <if test="note != null">#{note},</if>
-                <if test="createtime != null">#{createtime},</if>
-                <if test="completion != null">#{completion},</if>
-                <if test="docid != null">#{docid},</if>
-                <if test="transid != null">#{transid},</if>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="taskid != null">#{taskid},</if>
+            <if test="itemname != null">#{itemname},</if>
+            <if test="itemtype != null">#{itemtype},</if>
+            <if test="priority != null">#{priority},</if>
+            <if test="status != null">#{status},</if>
+            <if test="note != null">#{note},</if>
+            <if test="createtime != null">#{createtime},</if>
+            <if test="completion != null">#{completion},</if>
+            <if test="docid != null">#{docid},</if>
+            <if test="transid != null">#{transid},</if>
         </trim>
     </insert>
+
+    <!-- 动态更新任务 -->
     <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.model.TransportTask">
-        update transport_task
+        UPDATE transport_task
         <set>
-                <if test="itemname != null">
-                    itemName = #{itemname},
-                </if>
-                <if test="itemtype != null">
-                    itemType = #{itemtype},
-                </if>
-                <if test="priority != null">
-                    priority = #{priority},
-                </if>
-                <if test="status != null">
-                    status = #{status},
-                </if>
-                <if test="note != null">
-                    note = #{note},
-                </if>
-                <if test="createtime != null">
-                    createTime = #{createtime},
-                </if>
-                <if test="completion != null">
-                    completion = #{completion},
-                </if>
-                <if test="docid != null">
-                    docID = #{docid},
-                </if>
-                <if test="transid != null">
-                    transID = #{transid},
-                </if>
+            <if test="itemname != null">itemName = #{itemname},</if>
+            <if test="itemtype != null">itemType = #{itemtype},</if>
+            <if test="priority != null">priority = #{priority},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="note != null">note = #{note},</if>
+            <if test="createtime != null">createTime = #{createtime},</if>
+            <if test="completion != null">completion = #{completion},</if>
+            <if test="docid != null">docID = #{docid},</if>
+            <if test="transid != null">transID = #{transid},</if>
         </set>
-        where   taskID = #{taskid} 
+        WHERE taskID = #{taskid}
     </update>
+
+    <!-- 更新任务 -->
     <update id="updateByPrimaryKey" parameterType="com.example.demo.model.TransportTask">
-        update transport_task
-        set 
-            itemName =  #{itemname},
-            itemType =  #{itemtype},
-            priority =  #{priority},
-            status =  #{status},
-            note =  #{note},
-            createTime =  #{createtime},
-            completion =  #{completion},
-            docID =  #{docid},
-            transID =  #{transid}
-        where   taskID = #{taskid} 
+        UPDATE transport_task
+        SET
+            itemName = #{itemname},
+            itemType = #{itemtype},
+            priority = #{priority},
+            status = #{status},
+            note = #{note},
+            createTime = #{createtime},
+            completion = #{completion},
+            docID = #{docid},
+            transID = #{transid}
+        WHERE taskID = #{taskid}
     </update>
 
 <!--    -->
-    <select id="getPendingTasks" resultMap="BaseResultMap">
-        SELECT * FROM transport_task WHERE status = 'NEW'
+    <!-- 查询指定状态的任务 -->
+    <select id="getStatusTasks" parameterType="String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM transport_task
+        WHERE 1=1
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
     </select>
 
-    <select id="getPendingTasks" resultMap="BaseResultMap">
-        SELECT * FROM transport_task WHERE status = 'TRANSPORTING'
-    </select>
-
-    <select id="getStatusTasks" parameterType="com.example.demo.model.TransportTask" resultMap="BaseResultMap">
-        SELECT * FROM transport_task WHERE status = #{status}
-    </select>
-
+    <!-- 根据过滤条件查询任务 -->
     <select id="findByFilters" parameterType="com.example.demo.model.TransportTask" resultMap="BaseResultMap">
         SELECT
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List" />
         FROM transport_task
         <where>
             <if test="type != null">itemType = #{type}</if>
@@ -139,9 +133,10 @@
         </where>
     </select>
 
+    <!-- 根据运输员和过滤条件查询任务 -->
     <select id="findByTransporterAndFilters" parameterType="com.example.demo.model.TransportTask" resultMap="BaseResultMap">
         SELECT
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List" />
         FROM transport_task
         <where>
             transID = #{transporterId}
@@ -151,9 +146,10 @@
         </where>
     </select>
 
+    <!-- 根据科室医生和过滤条件查询任务 -->
     <select id="findByDepartmentDoctorIdsAndFilters" parameterType="com.example.demo.model.TransportTask" resultMap="BaseResultMap">
         SELECT
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List" />
         FROM transport_task
         <where>
             <if test="doctorIds != null and doctorIds.size() > 0">

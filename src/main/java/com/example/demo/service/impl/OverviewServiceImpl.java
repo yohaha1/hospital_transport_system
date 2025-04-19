@@ -16,7 +16,7 @@ public class OverviewServiceImpl implements OverviewService {
 
     @Override
     public List<TransportTask> getTransportingTasks(){
-        return transportTaskMapper.getTransportingTasks();
+        return transportTaskMapper.getStatusTasks("TRANSPORTING");
     }
 
 }

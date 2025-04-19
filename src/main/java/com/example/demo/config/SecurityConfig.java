@@ -95,7 +95,7 @@ public class SecurityConfig {
                 // 允许跨域
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("*"));
+                    config.setAllowedOrigins(List.of("http://localhost:5173"));
                     config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT"));
                     config.setAllowedHeaders(List.of("*"));
                     config.setAllowCredentials(true);

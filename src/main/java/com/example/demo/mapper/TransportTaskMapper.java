@@ -27,14 +27,12 @@ public interface TransportTaskMapper {
 
     int updateByPrimaryKey(TransportTask record);
 
-    List<TransportTask> getPendingTasks();
-
     List<TransportTask> findByFilters(String type, Date startDate, Date endDate);
 
     List<TransportTask> findByTransporterAndFilters(int transporterId,String type, Date startDate, Date endDate);
 
     List<TransportTask> findByDepartmentDoctorIdsAndFilters(List<Integer> doctorIds, String type, Date startDate, Date endDate);
 
-    List<TransportTask> getTransportingTasks();
+    List<TransportTask> getStatusTasks(String status);
 }
 

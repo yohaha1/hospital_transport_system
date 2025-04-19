@@ -84,8 +84,8 @@ public class TaskServiceImpl implements TaskService {
 
     //获取待接单任务
     @Override
-    public List<TransportTask> getPendingTasks() {
-        return transportTaskMapper.getPendingTasks();
+    public List<TransportTask> getStatusTasks(String status) {
+        return transportTaskMapper.getStatusTasks(status);
     }
 
     //运送员接单

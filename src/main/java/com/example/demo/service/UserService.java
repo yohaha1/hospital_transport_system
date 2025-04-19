@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UserService {
 
-    ResponseEntity<String> login(String username, String password);
-    ResponseEntity<String> addUser (User user);
+    String login(String username, String password) throws Exception;
+    String addUser (User user) throws Exception;
+
+    User selectByUsername(String username) throws Exception;
 }
