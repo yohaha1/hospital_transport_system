@@ -10,7 +10,9 @@ import java.util.List;
 
 @Service
 public interface TaskService{
-    void createTask(TransportTask task, List<TaskNode> nodes, List<MultipartFile> files);
+    int createTask(TransportTask task, List<TaskNode> nodes);
+
+    void saveFileToTask(Long taskId, MultipartFile file);
 
     void acceptTask(int taskId, int transporterId);
 
@@ -21,5 +23,5 @@ public interface TaskService{
 
     List<TransportTaskWithDepartment> getStatusTasks(String status);
 
-    List<String> getAllTypes();
+//    List<String> getAllTypes();
 }

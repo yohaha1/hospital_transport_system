@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Department;
 import com.example.demo.model.TransportTask;
 import com.example.demo.model.TaskNode;
 import com.example.demo.model.TransportTaskWithDepartment;
@@ -25,11 +24,26 @@ public class TaskController {
     @PreAuthorize("hasRole('ROLE_doctor')")
     public ResponseEntity<?> createTask(
             @RequestPart("task") TransportTask task,
-            @RequestPart("nodes") List<TaskNode> nodes,
-            @RequestPart("files") List<MultipartFile> files) {
+            @RequestPart("nodes") List<TaskNode> nodes) {
+        System.out.println("testttttttttttttttttttt");
         try {
-            taskService.createTask(task, nodes, files);
-            return ResponseEntity.ok(ApiResponse.success("Task and files created successfully"));
+            int taskId = taskService.createTask(task, nodes);
+            return ResponseEntity.ok(ApiResponse.success(taskId));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ApiResponse.failure("Invalid input: " + ex.getMessage()));
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body(ApiResponse.failure("Internal Server Error: " + ex.getMessage()));
+        }
+    }
+
+    @PostMapping("/uploadFile")
+    @PreAuthorize("hasRole('ROLE_doctor')")
+    public ResponseEntity<?> uploadFile(
+            @RequestParam("taskId") Long taskId,
+            @RequestPart("file") MultipartFile file) {
+        try {
+            taskService.saveFileToTask(taskId, file);
+            return ResponseEntity.ok(ApiResponse.success("File uploaded successfully"));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(ApiResponse.failure("Invalid input: " + ex.getMessage()));
         } catch (Exception ex) {
@@ -95,15 +109,14 @@ public class TaskController {
         }
     }
 
-    @GetMapping("/getAllTypes")
-    @PreAuthorize("hasAnyRole('doctor','admin')")
-    public ResponseEntity<?> getAllTypes() {
-        try {
-            List<String> res = taskService.getAllTypes();
-            return ResponseEntity.ok(ApiResponse.success(res));
-        } catch (Exception ex) {
-            return ResponseEntity.status(500).body(ApiResponse.failure(ex.getMessage()));
-        }
-    }
-
+//    @GetMapping("/getAllTypes")
+//    @PreAuthorize("hasAnyRole('doctor','admin')")
+//    public ResponseEntity<?> getAllTypes() {
+//        try {
+//            List<String> res = taskService.getAllTypes();
+//            return ResponseEntity.ok(ApiResponse.success(res));
+//        } catch (Exception ex) {
+//            return ResponseEntity.status(500).body(ApiResponse.failure(ex.getMessage()));
+//        }
+//    }
 }

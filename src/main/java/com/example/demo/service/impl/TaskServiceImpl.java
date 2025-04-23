@@ -30,14 +30,12 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private UserMapper userMapper;
 
-    //创建任务
+    // 创建任务（不带文件）
     @Override
-    public void createTask(TransportTask task, List<TaskNode> nodes, List<MultipartFile> files) {
-        // 设置任务创建时间
+    public int createTask(TransportTask task, List<TaskNode> nodes) {
         task.setCreatetime(new Date());
         transportTaskMapper.insert(task);
 
-        // 设置每个节点的任务ID和顺序
         if (nodes == null || nodes.isEmpty()) {
             throw new IllegalArgumentException("Nodes list cannot be null or empty");
         }
@@ -48,35 +46,40 @@ public class TaskServiceImpl implements TaskService {
             taskNodeMapper.insert(node);
         }
 
-        // 保存附件
-        if (files != null && !files.isEmpty()) {
-            String uploadDir = "D:/project/graduate_project/data/" + task.getTaskid();
-            File uploadDirFile = new File(uploadDir);
-            if (!uploadDirFile.exists()) {
-                uploadDirFile.mkdirs();
-            }
+        return task.getTaskid();
+    }
 
-            for (MultipartFile file : files) {
-                String originalFilename = file.getOriginalFilename();
-                String filePath = uploadDir + "/" + originalFilename;
-
-                File dest = new File(filePath);
-                try {
-                    file.transferTo(dest);
-                } catch (IOException e) {
-                    throw new RuntimeException("文件上传失败: " + originalFilename, e);
-                }
-
-                FileInfo fileInfo = new FileInfo();
-                fileInfo.setTaskid(task.getTaskid());
-                fileInfo.setFilepath(filePath);
-                fileInfo.setFilename(originalFilename);
-                fileInfo.setFiletype(file.getContentType());
-                fileInfo.setStage("CREATION");
-                fileInfo.setUploadtime(new Date());
-                fileMapper.insert(fileInfo);
-            }
+    // 上传文件到任务
+    @Override
+    public void saveFileToTask(Long taskId, MultipartFile file) {
+        if (file == null) {
+            throw new IllegalArgumentException("未上传图片！");
         }
+        // 文件保存路径
+        String uploadDir = "D:/project/graduate_project/data/" + taskId;
+        File uploadDirFile = new File(uploadDir);
+        if (!uploadDirFile.exists()) {
+            uploadDirFile.mkdirs();
+        }
+
+        String originalFilename = file.getOriginalFilename();
+        String filePath = uploadDir + "/" + originalFilename;
+
+        try {
+            File dest = new File(filePath);
+            file.transferTo(dest);
+        } catch (IOException e) {
+            throw new RuntimeException("文件上传失败: " + originalFilename, e);
+        }
+
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setTaskid(taskId.intValue());
+        fileInfo.setFilepath(filePath);
+        fileInfo.setFilename(originalFilename);
+        fileInfo.setFiletype(file.getContentType());
+        fileInfo.setStage("CREATION");
+        fileInfo.setUploadtime(new Date());
+        fileMapper.insert(fileInfo);
     }
 
     @Override
@@ -221,10 +224,10 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
-    @Override
-    public List<String> getAllTypes() {
-        return transportTaskMapper.getAllTypes();
-    }
+//    @Override
+//    public List<String> getAllTypes() {
+//        return transportTaskMapper.getAllTypes();
+//    }
 
 
     // 保存文件
