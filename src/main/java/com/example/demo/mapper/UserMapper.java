@@ -30,5 +30,8 @@ public interface UserMapper {
     User selectByUsername(String username);
 
     List<Integer> findDoctorIdsByDepartmentId(int departmentId);
+
+
+    int getDepartmentIdByDocId(int docId);
 }
 

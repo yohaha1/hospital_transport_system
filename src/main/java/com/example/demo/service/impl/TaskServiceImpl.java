@@ -1,13 +1,7 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.mapper.DepartmentMapper;
-import com.example.demo.mapper.FileInfoMapper;
-import com.example.demo.mapper.TaskNodeMapper;
-import com.example.demo.mapper.TransportTaskMapper;
-import com.example.demo.model.FileInfo;
-import com.example.demo.model.TaskNode;
-import com.example.demo.model.TransportTask;
-import com.example.demo.model.Department;
+import com.example.demo.mapper.*;
+import com.example.demo.model.*;
 import com.example.demo.util.QRCodeValidator;
 import com.example.demo.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File ;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +27,8 @@ public class TaskServiceImpl implements TaskService {
     private FileInfoMapper fileMapper;
     @Autowired
     private DepartmentMapper departmentMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     //创建任务
     @Override
@@ -82,10 +79,25 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
-    //获取待接单任务
     @Override
-    public List<TransportTask> getStatusTasks(String status) {
-        return transportTaskMapper.getStatusTasks(status);
+    public List<TransportTaskWithDepartment> getStatusTasks(String status) {
+        List<TransportTask> taskList = transportTaskMapper.getStatusTasks(status);
+        List<TransportTaskWithDepartment> result = new ArrayList<>();
+        for (TransportTask task : taskList) {
+            Integer docId = task.getDocid();
+            // 1. 通过docid查doctor表获得departmentId
+            Integer departmentId = userMapper.getDepartmentIdByDocId(docId);
+            Department department = null;
+            if (departmentId != null) {
+                department = departmentMapper.selectByPrimaryKey(Long.valueOf(departmentId));
+            }
+            // 2. 组装返回
+            TransportTaskWithDepartment dto = new TransportTaskWithDepartment();
+            dto.setTask(task);
+            dto.setDepartment(department);
+            result.add(dto);
+        }
+        return result;
     }
 
     //运送员接单
@@ -207,6 +219,11 @@ public class TaskServiceImpl implements TaskService {
                 throw new RuntimeException("更新任务状态为 DELIVERED 失败！");
             }
         }
+    }
+
+    @Override
+    public List<String> getAllTypes() {
+        return transportTaskMapper.getAllTypes();
     }
 
 

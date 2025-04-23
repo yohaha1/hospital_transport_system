@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.model.TaskNode;
 import com.example.demo.model.TransportTask;
-import org.springframework.http.ResponseEntity;
+import com.example.demo.model.TransportTaskWithDepartment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,5 +19,7 @@ public interface TaskService{
 
     void handOverTask(int taskId, int transporterId, int departmentId, MultipartFile file, String qrCodeData);
 
-    List<TransportTask> getStatusTasks(String status);
+    List<TransportTaskWithDepartment> getStatusTasks(String status);
+
+    List<String> getAllTypes();
 }

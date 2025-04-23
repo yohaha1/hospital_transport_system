@@ -38,7 +38,6 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
         );
-        System.out.println("登录结果："+ authentication.getPrincipal());
 
         // 将认证信息存入 SecurityContext
         SecurityContextHolder.getContext().setAuthentication(authentication);

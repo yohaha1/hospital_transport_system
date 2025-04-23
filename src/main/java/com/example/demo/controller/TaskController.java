@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.Department;
 import com.example.demo.model.TransportTask;
 import com.example.demo.model.TaskNode;
+import com.example.demo.model.TransportTaskWithDepartment;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +38,11 @@ public class TaskController {
     }
 
     @GetMapping("/searchByStatus")
-    @PreAuthorize("hasRole('ROLE_transporter')")
+    @PreAuthorize("hasAnyRole('doctor', 'transporter')")
     public ResponseEntity<?> getStatusTasks(@RequestParam("status") String status) {
         try {
-            List<TransportTask> pendingTasks = taskService.getStatusTasks(status);
-            return ResponseEntity.ok(ApiResponse.success(pendingTasks));
+            List<TransportTaskWithDepartment> res = taskService.getStatusTasks(status);
+            return ResponseEntity.ok(ApiResponse.success(res));
         } catch (Exception ex) {
             return ResponseEntity.status(500).body(ApiResponse.failure(ex.getMessage()));
         }
@@ -90,6 +92,17 @@ public class TaskController {
             return ResponseEntity.badRequest().body(ApiResponse.failure("无效输入: " +ex.getMessage()));
         } catch (Exception ex) {
             return ResponseEntity.status(500).body(ApiResponse.failure("出错了！" +  ex.getMessage()));
+        }
+    }
+
+    @GetMapping("/getAllTypes")
+    @PreAuthorize("hasAnyRole('doctor','admin')")
+    public ResponseEntity<?> getAllTypes() {
+        try {
+            List<String> res = taskService.getAllTypes();
+            return ResponseEntity.ok(ApiResponse.success(res));
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body(ApiResponse.failure(ex.getMessage()));
         }
     }
 

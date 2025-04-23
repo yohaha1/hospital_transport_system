@@ -74,4 +74,8 @@
     <select id="getAllDepartmentIds" resultType="java.lang.Integer">
         select departmentID from department
     </select>
+
+    <select id="getAllDepartments" resultType="com.example.demo.model.Department">
+        select * from department
+    </select>
 </mapper>

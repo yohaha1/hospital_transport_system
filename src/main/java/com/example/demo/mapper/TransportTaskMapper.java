@@ -9,7 +9,7 @@ import java.util.List;
 /**
 * @author haha
 * @description 针对表【transport_task(TRANSPORT_TASK)】的数据库操作Mapper
-* @createDate 2025-04-12 14:47:52
+* @createDate 2025-04-21 19:30:12
 * @Entity com.example.demo.model.TransportTask
 */
 @Mapper
@@ -27,12 +27,13 @@ public interface TransportTaskMapper {
 
     int updateByPrimaryKey(TransportTask record);
 
-    List<TransportTask> findByFilters(String type, Date startDate, Date endDate);
+    List<TransportTask> findByFilters(String status, Date startDate, Date endDate);
 
-    List<TransportTask> findByTransporterAndFilters(int transporterId,String type, Date startDate, Date endDate);
+    List<TransportTask> findByTransporterAndFilters(int transporterId,String status, Date startDate, Date endDate);
 
-    List<TransportTask> findByDepartmentDoctorIdsAndFilters(List<Integer> doctorIds, String type, Date startDate, Date endDate);
+    List<TransportTask> findByDepartmentDoctorIdsAndFilters(List<Integer> doctorIds, String status, Date startDate, Date endDate);
 
     List<TransportTask> getStatusTasks(String status);
-}
 
+    List<String> getAllTypes();
+}

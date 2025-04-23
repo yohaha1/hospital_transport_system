@@ -59,6 +59,86 @@ public class TransportTask {
      */
     private Integer transid;
 
+    public Integer getTaskid() {
+        return taskid;
+    }
+
+    public void setTaskid(Integer taskid) {
+        this.taskid = taskid;
+    }
+
+    public String getItemname() {
+        return itemname;
+    }
+
+    public void setItemname(String itemname) {
+        this.itemname = itemname;
+    }
+
+    public String getItemtype() {
+        return itemtype;
+    }
+
+    public void setItemtype(String itemtype) {
+        this.itemtype = itemtype;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public Object getStatus() {
+        return status;
+    }
+
+    public void setStatus(Object status) {
+        this.status = status;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Date getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(Date createtime) {
+        this.createtime = createtime;
+    }
+
+    public Date getCompletion() {
+        return completion;
+    }
+
+    public void setCompletion(Date completion) {
+        this.completion = completion;
+    }
+
+    public Integer getDocid() {
+        return docid;
+    }
+
+    public void setDocid(Integer docid) {
+        this.docid = docid;
+    }
+
+    public Integer getTransid() {
+        return transid;
+    }
+
+    public void setTransid(Integer transid) {
+        this.transid = transid;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {

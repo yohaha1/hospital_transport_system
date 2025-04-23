@@ -107,4 +107,12 @@
         WHERE departmentId = #{departmentId}
     </select>
 
+<!--    -->
+    <select id="getDepartmentIdByDocId" resultType="java.lang.Integer">
+        SELECT departmentID
+        FROM user
+        WHERE userID = #{docId}
+    </select>
+
+
 </mapper>
