@@ -36,10 +36,11 @@ public class TaskController {
     @PostMapping("/uploadFile")
     @PreAuthorize("hasRole('ROLE_doctor')")
     public ResponseEntity<?> uploadFile(
-            @RequestParam("taskId") Long taskId,
+            @RequestParam("taskId") int taskId,
+            @RequestParam("stage") String stage,
             @RequestPart("file") MultipartFile file) {
         try {
-            taskService.saveFileToTask(taskId, file);
+            taskService.saveFileToTask(taskId, file, stage);
             return ResponseEntity.ok(ApiResponse.success("File uploaded successfully"));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(ApiResponse.failure("Invalid input: " + ex.getMessage()));

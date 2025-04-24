@@ -39,13 +39,33 @@ public class RecordsServiceImpl implements RecordsService {
     }
 
     @Override
-    public List<TransportTask> getDepartmentTaskRecords(int departmentId, String status, Date startDate, Date endDate) {
+    public List<TaskWithTransporterDTO> getDepartmentTaskRecords(int departmentId, String status, Date startDate, Date endDate) {
         List<Integer> doctorIds = userMapper.findDoctorIdsByDepartmentId(departmentId);
         if (doctorIds == null || doctorIds.isEmpty()) {
             // 如果没有医生用户，直接返回空列表
             return List.of();
         }
-        return transportTaskMapper.findByDepartmentDoctorIdsAndFilters(doctorIds, status, startDate, endDate);
+        List<TransportTask> taskList = transportTaskMapper.findByDepartmentDoctorIdsAndFilters(doctorIds, status, startDate, endDate);
+
+        List<TaskWithTransporterDTO> result = new ArrayList<>();
+        for (TransportTask task : taskList) {
+            Integer transId = task.getTransid();
+            String userName;
+            // 1. 通过docid查doctor表获得departmentId
+            if(transId != null){
+                User trans = userMapper.selectByPrimaryKey((long)transId);
+                userName = trans.getName();
+            }else{
+                userName = "";
+            }
+            // 2. 组装返回
+            TaskWithTransporterDTO dto = new TaskWithTransporterDTO();
+            dto.setTask(task);
+            dto.setTransporterName(userName);
+            result.add(dto);
+        }
+        System.out.println("testttttttttttt"+result);
+        return result;
     }
 
     @Override

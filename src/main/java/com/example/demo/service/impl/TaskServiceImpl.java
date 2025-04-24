@@ -10,9 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File ;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -51,7 +49,7 @@ public class TaskServiceImpl implements TaskService {
 
     // 上传文件到任务
     @Override
-    public void saveFileToTask(Long taskId, MultipartFile file) {
+    public void saveFileToTask(int taskId, MultipartFile file, String stage) {
         if (file == null) {
             throw new IllegalArgumentException("未上传图片！");
         }
@@ -73,11 +71,11 @@ public class TaskServiceImpl implements TaskService {
         }
 
         FileInfo fileInfo = new FileInfo();
-        fileInfo.setTaskid(taskId.intValue());
+        fileInfo.setTaskid(taskId);
         fileInfo.setFilepath(filePath);
         fileInfo.setFilename(originalFilename);
         fileInfo.setFiletype(file.getContentType());
-        fileInfo.setStage("CREATION");
+        fileInfo.setStage(stage);
         fileInfo.setUploadtime(new Date());
         fileMapper.insert(fileInfo);
     }
@@ -85,11 +83,22 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TransportTaskWithDepartmentDTO> getStatusTasks(String status) {
         List<TransportTask> taskList = transportTaskMapper.getStatusTasks(status);
+        // 定义排序优先级
+        Map<String, Integer> statusOrder = new HashMap<>();
+        statusOrder.put("NEW", 0);
+        statusOrder.put("TRANSPORTING", 1);
+        statusOrder.put("DELIVERED", 2);
+
+        // 排序
+        taskList.sort(Comparator.comparingInt(
+                t -> statusOrder.getOrDefault(t.getStatus(), Integer.MAX_VALUE)
+        ));
+
         List<TransportTaskWithDepartmentDTO> result = new ArrayList<>();
         for (TransportTask task : taskList) {
             Integer docId = task.getDocid();
             // 1. 通过docid查doctor表获得departmentId
-            Integer departmentId = userMapper.getDepartmentIdByDocId(docId);
+            Integer departmentId = userMapper.getDepartmentIdByUserId(docId);
             Department department = null;
             if (departmentId != null) {
                 department = departmentMapper.selectByPrimaryKey(Long.valueOf(departmentId));
@@ -139,7 +148,7 @@ public class TaskServiceImpl implements TaskService {
         // 校验二维码
         qrCodeValidator.validateQRCode(qrCodeData, startNode.getDepartmentid(), 120); // 120秒过期
 
-        saveFile(file,taskId,"PICKUP");
+        saveFileToTask(taskId,file,"PICKUP");
 
         // 更新任务节点表，记录时间
         startNode.setHandovertime(new Date());
@@ -212,7 +221,7 @@ public class TaskServiceImpl implements TaskService {
 
         if (correctNode.getSequence() == maxSequence) {
             // 上传图片
-            saveFile(file, taskId, "DELIVERED");
+            saveFileToTask(taskId,file,  "DELIVERED");
             // 如果是最后一个节点，更新任务状态为 "DELIVERED"
             TransportTask task = transportTaskMapper.selectByPrimaryKey((long) taskId);
             task.setStatus("DELIVERED");
@@ -228,42 +237,6 @@ public class TaskServiceImpl implements TaskService {
 //    public List<String> getAllTypes() {
 //        return transportTaskMapper.getAllTypes();
 //    }
-
-
-    // 保存文件
-    private void saveFile(MultipartFile file, int taskId, String stage) {
-        if(file == null) {
-            throw new IllegalArgumentException("未上传图片！");
-        }
-
-        // 处理上传图片
-        String uploadDir = "D:/project/graduate_project/data/" + taskId;
-        File uploadDirFile = new File(uploadDir);
-        if (!uploadDirFile.exists()) {
-            uploadDirFile.mkdirs();
-        }
-
-        String originalFilename = file.getOriginalFilename();
-        String filePath = uploadDir +'/'+ originalFilename;
-
-        try {
-            // 保存文件到指定路径
-            File dest = new File(filePath);
-            file.transferTo(dest);
-        } catch (IOException e) {
-            throw new RuntimeException("文件上传失败！", e);
-        }
-
-        // 插入文件信息到数据库
-        FileInfo fileInfo = new FileInfo();
-        fileInfo.setTaskid(taskId);
-        fileInfo.setFilepath(filePath);
-        fileInfo.setFilename(originalFilename);
-        fileInfo.setFiletype(file.getContentType());
-        fileInfo.setStage(stage);
-        fileInfo.setUploadtime(new Date());
-        fileMapper.insert(fileInfo);
-    }
 
     //检查任务状态是否正确，以及运送员信息等
     private void stateCheck(int taskId, int transporterId, String state) {

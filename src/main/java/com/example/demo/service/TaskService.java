@@ -12,7 +12,7 @@ import java.util.List;
 public interface TaskService{
     int createTask(TransportTask task, List<TaskNode> nodes);
 
-    void saveFileToTask(Long taskId, MultipartFile file);
+    void saveFileToTask(int taskId, MultipartFile file, String stage);
 
     void acceptTask(int taskId, int transporterId);
 

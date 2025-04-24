@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.TaskNodeWithDepartmentDTO;
+import com.example.demo.model.TaskWithTransporterDTO;
 import com.example.demo.model.TransportTask;
+import com.example.demo.model.TransportTaskWithDepartmentDTO;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.RecordsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +62,7 @@ public class RecordsController {
             @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
         try {
-            List<TransportTask> tasks = recordsService.getDepartmentTaskRecords(departmentId, status, startDate, endDate);
+            List<TaskWithTransporterDTO> tasks = recordsService.getDepartmentTaskRecords(departmentId, status, startDate, endDate);
             return ResponseEntity.ok(ApiResponse.success(tasks));
         } catch (Exception ex) {
             return ResponseEntity.status(500).body(ApiResponse.failure(ex.getMessage()));

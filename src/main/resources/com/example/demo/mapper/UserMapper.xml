@@ -108,10 +108,10 @@
     </select>
 
 <!--    -->
-    <select id="getDepartmentIdByDocId" resultType="java.lang.Integer">
+    <select id="getDepartmentIdByUserId" resultType="java.lang.Integer">
         SELECT departmentID
         FROM user
-        WHERE userID = #{docId}
+        WHERE userID = #{userId}
     </select>
 
 
