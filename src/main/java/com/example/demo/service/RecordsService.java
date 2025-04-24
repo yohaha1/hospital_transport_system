@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.model.TaskNodeWithDepartment;
+import com.example.demo.model.TaskNodeWithDepartmentDTO;
 import com.example.demo.model.TransportTask;
 import org.springframework.stereotype.Service;
 
@@ -16,5 +16,5 @@ public interface RecordsService {
 
     List<TransportTask> getDepartmentTaskRecords(int departmentId, String status, Date startDate, Date endDate);
 
-    List<TaskNodeWithDepartment> getTaskNodesByTaskId(int taskId);
+    List<TaskNodeWithDepartmentDTO> getTaskNodesByTaskId(int taskId);
 }

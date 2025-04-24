@@ -1,8 +1,9 @@
 package com.example.demo.model;
 
 import lombok.Data;
+
 @Data
-public class TransportTaskWithDepartment {
-    private TransportTask task;
+public class TaskNodeWithDepartmentDTO {
+    private TaskNode node;
     private Department department;
 }

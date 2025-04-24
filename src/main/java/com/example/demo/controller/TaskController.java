@@ -1,8 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.TransportTask;
-import com.example.demo.model.TaskNode;
-import com.example.demo.model.TransportTaskWithDepartment;
+import com.example.demo.model.CreateTaskDTO;
+import com.example.demo.model.TransportTaskWithDepartmentDTO;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +21,10 @@ public class TaskController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_doctor')")
-    public ResponseEntity<?> createTask(
-            @RequestPart("task") TransportTask task,
-            @RequestPart("nodes") List<TaskNode> nodes) {
+    public ResponseEntity<?> createTask(@RequestBody CreateTaskDTO dto) {
         System.out.println("testttttttttttttttttttt");
         try {
-            int taskId = taskService.createTask(task, nodes);
+            int taskId = taskService.createTask(dto.getTask(), dto.getNodes());
             return ResponseEntity.ok(ApiResponse.success(taskId));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(ApiResponse.failure("Invalid input: " + ex.getMessage()));
@@ -55,7 +52,7 @@ public class TaskController {
     @PreAuthorize("hasAnyRole('doctor', 'transporter')")
     public ResponseEntity<?> getStatusTasks(@RequestParam("status") String status) {
         try {
-            List<TransportTaskWithDepartment> res = taskService.getStatusTasks(status);
+            List<TransportTaskWithDepartmentDTO> res = taskService.getStatusTasks(status);
             return ResponseEntity.ok(ApiResponse.success(res));
         } catch (Exception ex) {
             return ResponseEntity.status(500).body(ApiResponse.failure(ex.getMessage()));

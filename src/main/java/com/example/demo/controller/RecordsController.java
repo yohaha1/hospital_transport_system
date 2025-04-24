@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.TaskNode;
-import com.example.demo.model.TaskNodeWithDepartment;
+import com.example.demo.model.TaskNodeWithDepartmentDTO;
 import com.example.demo.model.TransportTask;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.RecordsService;
@@ -72,7 +71,7 @@ public class RecordsController {
     @GetMapping("/taskNodes/{taskId}")
     public ResponseEntity<?> getTaskNodesByTaskId(@PathVariable("taskId") int taskId) {
         try{
-            List<TaskNodeWithDepartment> nodes = recordsService.getTaskNodesByTaskId(taskId);
+            List<TaskNodeWithDepartmentDTO> nodes = recordsService.getTaskNodesByTaskId(taskId);
             return ResponseEntity.ok(ApiResponse.success(nodes));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));

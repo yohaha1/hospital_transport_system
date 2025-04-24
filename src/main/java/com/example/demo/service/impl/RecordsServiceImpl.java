@@ -49,19 +49,19 @@ public class RecordsServiceImpl implements RecordsService {
     }
 
     @Override
-    public List<TaskNodeWithDepartment> getTaskNodesByTaskId(int taskId) {
+    public List<TaskNodeWithDepartmentDTO> getTaskNodesByTaskId(int taskId) {
         if(taskId == 0){
             throw new IllegalArgumentException("任务ID不能为空！");
         }
         List<TaskNode> nodes = taskNodeMapper.selectByTaskId(taskId);
-        List<TaskNodeWithDepartment> result = new ArrayList<>();
+        List<TaskNodeWithDepartmentDTO> result = new ArrayList<>();
         for (TaskNode node : nodes) {
             Integer departmentId = node.getDepartmentid();
             Department department = null;
             if(departmentId != null){
                 department = departmentMapper.selectByPrimaryKey(Long.valueOf(departmentId));
             }
-            TaskNodeWithDepartment tnd = new TaskNodeWithDepartment();
+            TaskNodeWithDepartmentDTO tnd = new TaskNodeWithDepartmentDTO();
             tnd.setDepartment(department);
             tnd.setNode(node);
             result.add(tnd);

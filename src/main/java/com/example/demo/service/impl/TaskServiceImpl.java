@@ -83,9 +83,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TransportTaskWithDepartment> getStatusTasks(String status) {
+    public List<TransportTaskWithDepartmentDTO> getStatusTasks(String status) {
         List<TransportTask> taskList = transportTaskMapper.getStatusTasks(status);
-        List<TransportTaskWithDepartment> result = new ArrayList<>();
+        List<TransportTaskWithDepartmentDTO> result = new ArrayList<>();
         for (TransportTask task : taskList) {
             Integer docId = task.getDocid();
             // 1. 通过docid查doctor表获得departmentId
@@ -95,7 +95,7 @@ public class TaskServiceImpl implements TaskService {
                 department = departmentMapper.selectByPrimaryKey(Long.valueOf(departmentId));
             }
             // 2. 组装返回
-            TransportTaskWithDepartment dto = new TransportTaskWithDepartment();
+            TransportTaskWithDepartmentDTO dto = new TransportTaskWithDepartmentDTO();
             dto.setTask(task);
             dto.setDepartment(department);
             result.add(dto);
