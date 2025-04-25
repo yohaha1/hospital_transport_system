@@ -46,7 +46,7 @@ public class RecordsController {
             @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
         try {
-            List<TransportTask> tasks = recordsService.getTransporterTaskRecords(transporterId, status, startDate, endDate);
+            List<TransportTaskWithDepartmentDTO> tasks = recordsService.getTransporterTaskRecords(transporterId, status, startDate, endDate);
             return ResponseEntity.ok(ApiResponse.success(tasks));
         } catch (Exception ex) {
             return ResponseEntity.status(500).body(ApiResponse.failure(ex.getMessage()));

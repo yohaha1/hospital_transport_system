@@ -6,4 +6,5 @@ import lombok.Data;
 public class TaskWithTransporterDTO {
     private TransportTask task;
     private String transporterName;
+    private String doctorName;
 }

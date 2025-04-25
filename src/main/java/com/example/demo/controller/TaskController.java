@@ -63,7 +63,7 @@ public class TaskController {
     @PostMapping("/accept/{taskId}")
     @PreAuthorize("hasRole('ROLE_transporter')")
     public ResponseEntity<?> acceptTask(@PathVariable("taskId") int taskId,
-                                             @RequestParam("transporterId") int transporterId){
+                                        @RequestParam("transporterId") int transporterId){
         try{
             taskService.acceptTask(taskId, transporterId);
             return ResponseEntity.ok(ApiResponse.success("接单成功！"));

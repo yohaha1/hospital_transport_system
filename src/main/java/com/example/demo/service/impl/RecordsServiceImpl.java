@@ -34,8 +34,22 @@ public class RecordsServiceImpl implements RecordsService {
     }
 
     @Override
-    public List<TransportTask> getTransporterTaskRecords(int transporterId, String status, Date startDate, Date endDate) {
-        return transportTaskMapper.findByTransporterAndFilters(transporterId, status, startDate, endDate);
+    public List<TransportTaskWithDepartmentDTO> getTransporterTaskRecords(int transporterId, String status, Date startDate, Date endDate) {
+        List<TransportTask> tasks = transportTaskMapper.findByTransporterAndFilters(transporterId, status,startDate, endDate);
+        List<TransportTaskWithDepartmentDTO> result = new ArrayList<>();
+        for(TransportTask task : tasks) {
+            Integer docId = task.getDocid();
+            Integer departmentId = userMapper.getDepartmentIdByUserId(docId);
+            Department department = null;
+            if(departmentId != null) {
+                department = departmentMapper.selectByPrimaryKey((long)departmentId);
+            }
+            TransportTaskWithDepartmentDTO dto = new TransportTaskWithDepartmentDTO();
+            dto.setTask(task);
+            dto.setDepartment(department);
+            result.add(dto);
+        }
+        return result;
     }
 
     @Override
@@ -50,18 +64,26 @@ public class RecordsServiceImpl implements RecordsService {
         List<TaskWithTransporterDTO> result = new ArrayList<>();
         for (TransportTask task : taskList) {
             Integer transId = task.getTransid();
-            String userName;
-            // 1. 通过docid查doctor表获得departmentId
+            Integer docId = task.getDocid();
+            String transName;
+            String docName;
             if(transId != null){
                 User trans = userMapper.selectByPrimaryKey((long)transId);
-                userName = trans.getName();
+                transName = trans.getName();
             }else{
-                userName = "";
+                transName = "";
             }
-            // 2. 组装返回
+            if(docId != null){
+                User doc = userMapper.selectByPrimaryKey((long)docId);
+                docName = doc.getName();
+            }else{
+                docName = "";
+            }
+            //  组装返回
             TaskWithTransporterDTO dto = new TaskWithTransporterDTO();
             dto.setTask(task);
-            dto.setTransporterName(userName);
+            dto.setTransporterName(transName);
+            dto.setDoctorName(docName);
             result.add(dto);
         }
         System.out.println("testttttttttttt"+result);
