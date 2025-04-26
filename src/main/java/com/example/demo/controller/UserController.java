@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.User;
 import com.example.demo.payload.LoginRequest;
 import com.example.demo.response.ApiResponse;
@@ -11,12 +12,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserMapper userMapper;
 
 
     @PostMapping("/login")
@@ -32,6 +37,22 @@ public class UserController {
             return ResponseEntity.status(400).body(ApiResponse.failure(e.getMessage()));
         }
         catch (Exception e){
+            return ResponseEntity.status(500).body(ApiResponse.failure(e.getMessage()));
+        }
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<?> changePassword(@RequestBody Map<String, Object> params) {
+        System.out.println("testtttttttttt"+params);
+        int userId = (int)params.get("userId");
+        String oldPassword = (String) params.get("oldPassword");
+        String newPassword = (String) params.get("newPassword");
+        try{
+            userService.changePassword(userId,oldPassword,newPassword);
+            return ResponseEntity.ok(ApiResponse.success("密码修改成功！"));
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));
+        }catch (Exception e){
             return ResponseEntity.status(500).body(ApiResponse.failure(e.getMessage()));
         }
     }

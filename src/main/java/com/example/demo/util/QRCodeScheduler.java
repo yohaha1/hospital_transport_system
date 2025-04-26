@@ -1,6 +1,7 @@
 package com.example.demo.util;
 
 import com.example.demo.mapper.DepartmentMapper;
+import com.example.demo.model.Department;
 import com.example.demo.util.QRCodeGenerator;
 import com.google.zxing.WriterException;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,11 +20,13 @@ public class QRCodeScheduler {
         this.departmentMapper = departmentMapper;
     }
 
-    @Scheduled(fixedRate = 300000) // 每两分钟运行一次
+    @Scheduled(fixedRate = 300000) // 每五分钟运行一次
     public void updateQRCode() {
         try {
+            List<Department> departments = departmentMapper.getAllDepartments();
             List<Integer> departmentIds = departmentMapper.getAllDepartmentIds();
-            for (int departmentId : departmentIds) {
+            for (Department department : departments) {
+                int departmentId = department.getDepartmentid();
                 try {
                     // 生成二维码内容
                     String content = QRCodeGenerator.generateQRCodeContent(departmentId);
@@ -31,6 +34,8 @@ public class QRCodeScheduler {
                     // 保存二维码图片
                     String filePath = "D:/project/graduate_project/data/qrCode/department_" + departmentId + ".png";
                     QRCodeGenerator.generateQRCode(content, filePath);
+                    department.setQrcode(filePath);
+                    departmentMapper.updateByPrimaryKey(department);
 
                     System.out.println("已生成部门 " + departmentId + " 的二维码: " + content);
                 } catch (IOException e) {

@@ -7,9 +7,7 @@ import com.example.demo.security.MyUserDetails;
 import com.example.demo.service.UserService;
 import com.example.demo.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -67,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
         // 对密码进行加密
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        System.out.println(user);
+//        System.out.println(user);
 
         // 插入用户
         userMapper.insert(user);
@@ -83,6 +81,23 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("用户不存在");
         }
         return user;
+    }
+
+    @Override
+    public void changePassword(int userId, String oldPassword, String newPassword) throws Exception {
+        // 1. 查询用户
+        User user = userMapper.selectByPrimaryKey((long)userId);
+        if (user == null) {
+            throw new IllegalArgumentException("用户不存在");
+        }
+        // 2. 校验原密码
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new IllegalArgumentException("原密码错误");
+        }
+        // 3. 加密新密码并更新
+        String encodedNewPwd = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedNewPwd);
+        userMapper.updateByPrimaryKey(user);
     }
 
 }

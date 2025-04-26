@@ -11,4 +11,6 @@ public interface UserService {
     String addUser (User user) throws Exception;
 
     User selectByUsername(String username) throws Exception;
+
+    void changePassword(int userId, String oldPassword, String newPassword) throws Exception;
 }

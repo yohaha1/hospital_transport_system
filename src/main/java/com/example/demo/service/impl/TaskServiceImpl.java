@@ -124,7 +124,7 @@ public class TaskServiceImpl implements TaskService {
         }
         //更新任务状态，设置运送员
         task.setTransid(transporterId);
-        task.setStatus("ACCEPTED");
+        task.setStatus("TRANSPORTING");
         int res = transportTaskMapper.updateByPrimaryKeySelective(task);
         if (res != 1) {
             throw new RuntimeException("更新任务状态失败！");

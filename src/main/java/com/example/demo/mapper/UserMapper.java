@@ -32,5 +32,6 @@ public interface UserMapper {
     List<Integer> findDoctorIdsByDepartmentId(int departmentId);
 
     int getDepartmentIdByUserId(int userId);
+
 }
 
