@@ -4,6 +4,8 @@ import com.example.demo.model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 public interface UserService {
 
@@ -13,4 +15,6 @@ public interface UserService {
     User selectByUsername(String username) throws Exception;
 
     void changePassword(int userId, String oldPassword, String newPassword) throws Exception;
+
+    Map<String,Integer> getFreeTransCount() throws Exception;
 }

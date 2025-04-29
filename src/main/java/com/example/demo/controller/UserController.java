@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -20,9 +21,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserMapper userMapper;
-
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
@@ -62,7 +60,7 @@ public class UserController {
     public ResponseEntity<?> addUser(@RequestBody User user) {
         try{
             String res = userService.addUser(user);
-            return ResponseEntity.ok(res);
+            return ResponseEntity.ok(ApiResponse.success(res));
         }catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));
         }catch (Exception e){
@@ -78,6 +76,19 @@ public class UserController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));
         } catch (Exception e) {
+            return ResponseEntity.status(500).body(ApiResponse.failure(e.getMessage()));
+        }
+    }
+
+    @GetMapping("/getFreeTransCount")
+    public ResponseEntity<?> getFreeTransCount() {
+        try{
+            Map<String, Integer> counts;
+            counts = userService.getFreeTransCount();
+            return ResponseEntity.ok(ApiResponse.success(counts));
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));
+        }catch (Exception e){
             return ResponseEntity.status(500).body(ApiResponse.failure(e.getMessage()));
         }
     }

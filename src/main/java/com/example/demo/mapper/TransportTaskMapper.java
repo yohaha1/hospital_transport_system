@@ -36,4 +36,6 @@ public interface TransportTaskMapper {
     List<TransportTask> getStatusTasks(String status);
 
     List<String> getAllTypes();
+
+    int getBusyTransCount();
 }

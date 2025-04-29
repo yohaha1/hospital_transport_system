@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.mapper.TransportTaskMapper;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.JwtEntity;
 import com.example.demo.model.User;
@@ -13,6 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Service
@@ -29,6 +33,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private TransportTaskMapper transportTaskMapper;
 
     @Override
     public String login(String username, String password) throws Exception {
@@ -98,6 +104,17 @@ public class UserServiceImpl implements UserService {
         String encodedNewPwd = passwordEncoder.encode(newPassword);
         user.setPassword(encodedNewPwd);
         userMapper.updateByPrimaryKey(user);
+    }
+
+    @Override
+    public Map<String, Integer> getFreeTransCount() throws Exception {
+        int all = userMapper.getAllTransCount();
+        int busy = transportTaskMapper.getBusyTransCount();
+        int free = all - busy;
+        Map<String, Integer> counts = new HashMap<>();
+        counts.put("all", all);
+        counts.put("free", free);
+        return counts;
     }
 
 }

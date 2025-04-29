@@ -33,5 +33,6 @@ public interface UserMapper {
 
     int getDepartmentIdByUserId(int userId);
 
+    int getAllTransCount();
 }
 

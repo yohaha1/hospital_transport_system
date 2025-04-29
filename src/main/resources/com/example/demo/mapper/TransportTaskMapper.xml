@@ -174,4 +174,10 @@
     <select id="getAllTypes" resultType="java.lang.String">
         select itemType from transport_task
     </select>
+
+    <select id="getBusyTransCount" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT docID)
+        FROM transport_task
+        WHERE status = 'TRANSPORTING'
+    </select>
 </mapper>
