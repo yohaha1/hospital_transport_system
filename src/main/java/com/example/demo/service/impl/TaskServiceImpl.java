@@ -133,7 +133,7 @@ public class TaskServiceImpl implements TaskService {
 
     //开启任务
     @Override
-    public void startTask(int taskId, int transporterId, MultipartFile file, String qrCodeData) {
+    public void startTask(int taskId, int transporterId, String qrCodeData) {
         stateCheck(taskId,transporterId,"ACCEPTED");
 
         // 初始化二维码校验器
@@ -147,8 +147,6 @@ public class TaskServiceImpl implements TaskService {
 
         // 校验二维码
         qrCodeValidator.validateQRCode(qrCodeData, startNode.getDepartmentid(), 120); // 120秒过期
-
-        saveFileToTask(taskId,file,"PICKUP");
 
         // 更新任务节点表，记录时间
         startNode.setHandovertime(new Date());
@@ -168,7 +166,7 @@ public class TaskServiceImpl implements TaskService {
 
     //任务交接
     @Override
-    public void handOverTask(int taskId, int transporterId, int departmentId, MultipartFile file, String qrCodeData) {
+    public void handOverTask(int taskId, int transporterId, String qrCodeData) {
         stateCheck(taskId,transporterId,"TRANSPORTING");
 
 //        TaskNode currentNode = taskNodeMapper.selectByTaskIdAndDepartmentId(taskId, departmentId);
@@ -220,8 +218,6 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new IllegalArgumentException("无法获取任务的最大节点序号！"));
 
         if (correctNode.getSequence() == maxSequence) {
-            // 上传图片
-            saveFileToTask(taskId,file,  "DELIVERED");
             // 如果是最后一个节点，更新任务状态为 "DELIVERED"
             TransportTask task = transportTaskMapper.selectByPrimaryKey((long) taskId);
             task.setStatus("DELIVERED");

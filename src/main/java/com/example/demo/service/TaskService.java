@@ -17,9 +17,9 @@ public interface TaskService{
     void acceptTask(int taskId, int transporterId);
 
     //开启任务
-    void startTask(int taskId, int transporterId, MultipartFile file, String qrCodeData);
+    void startTask(int taskId, int transporterId, String qrCodeData);
 
-    void handOverTask(int taskId, int transporterId, int departmentId, MultipartFile file, String qrCodeData);
+    void handOverTask(int taskId, int transporterId, String qrCodeData);
 
     List<TransportTaskWithDepartmentDTO> getStatusTasks(String status);
 

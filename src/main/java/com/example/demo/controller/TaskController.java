@@ -34,7 +34,7 @@ public class TaskController {
     }
 
     @PostMapping("/uploadFile")
-    @PreAuthorize("hasRole('ROLE_doctor')")
+    @PreAuthorize("hasAnyRole('doctor', 'transporter','admin')")
     public ResponseEntity<?> uploadFile(
             @RequestParam("taskId") int taskId,
             @RequestParam("stage") String stage,
@@ -78,10 +78,9 @@ public class TaskController {
     @PreAuthorize("hasRole('ROLE_transporter')")
     public ResponseEntity<?> startTask(@PathVariable("taskId") int taskId,
                                             @RequestParam("transporterId")int transporterId,
-                                            @RequestPart("file") MultipartFile file,
                                             @RequestParam("qrCodeData") String qrCodeData){
         try{
-            taskService.startTask(taskId,transporterId,file,qrCodeData);
+            taskService.startTask(taskId,transporterId,qrCodeData);
             return ResponseEntity.ok(ApiResponse.success("任务开始！"));
         }catch (IllegalArgumentException ex){
             return ResponseEntity.badRequest().body(ApiResponse.failure("无效输入: " + ex.getMessage()));
@@ -94,11 +93,9 @@ public class TaskController {
     @PreAuthorize("hasRole('ROLE_transporter')")
     public ResponseEntity<?> handOverTask(@PathVariable("taskId") int taskId,
                                                @RequestParam("transporterId") int transporterId,
-                                               @RequestParam("departmentId") int departmentId,
-                                               @RequestPart(value = "file", required = false) MultipartFile file,
                                                @RequestParam("qrCodeData") String qrCodeData){
         try{
-            taskService.handOverTask(taskId,transporterId,departmentId,file, qrCodeData);
+            taskService.handOverTask(taskId,transporterId,qrCodeData);
             return ResponseEntity.ok(ApiResponse.success("任务交接成功！"));
         }catch (IllegalArgumentException ex){
             return ResponseEntity.badRequest().body(ApiResponse.failure("无效输入: " +ex.getMessage()));

@@ -9,6 +9,11 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
+#  datasource:
+#    url: jdbc:mysql://10.11.100.87:3306/graduation_db?useSSL=false&serverTimezone=Asia/Shanghai
+#    username: root
+#    password: Liyuxin702
+#    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     properties:

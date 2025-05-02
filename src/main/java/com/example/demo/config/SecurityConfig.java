@@ -82,6 +82,7 @@ public class SecurityConfig {
                         ).permitAll()
                         // 登录和注册允许匿名访问
                         .requestMatchers("/user/login").permitAll()
+                        .requestMatchers("/files/**").permitAll()
                         // 允许 OPTIONS 请求
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         // 其他请求需要认证

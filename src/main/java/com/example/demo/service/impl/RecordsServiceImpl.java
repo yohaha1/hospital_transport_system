@@ -1,9 +1,6 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.mapper.DepartmentMapper;
-import com.example.demo.mapper.TaskNodeMapper;
-import com.example.demo.mapper.TransportTaskMapper;
-import com.example.demo.mapper.UserMapper;
+import com.example.demo.mapper.*;
 import com.example.demo.model.*;
 import com.example.demo.service.RecordsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +24,9 @@ public class RecordsServiceImpl implements RecordsService {
 
     @Autowired
     private DepartmentMapper departmentMapper;
+
+    @Autowired
+    private FileInfoMapper fileInfoMapper;
 
     @Override
     public List<TransportTask> getAllTaskRecords(String status, Date startDate, Date endDate) {
@@ -110,5 +110,10 @@ public class RecordsServiceImpl implements RecordsService {
         }
         return result;
     };
+
+    @Override
+    public List<FileInfo> getFilesByTaskId(int taskId) {
+        return fileInfoMapper.selectByTaskId(taskId);
+    }
 
 }

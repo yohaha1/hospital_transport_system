@@ -3,6 +3,8 @@ package com.example.demo.mapper;
 import com.example.demo.model.FileInfo;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
 * @author haha
 * @description 针对表【file_info(file)】的数据库操作Mapper
@@ -24,4 +26,6 @@ public interface FileInfoMapper {
 
     int updateByPrimaryKey(FileInfo record);
 
+    List<FileInfo> selectByTaskId(int taskId);
 }
+

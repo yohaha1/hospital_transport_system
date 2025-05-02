@@ -1,19 +1,20 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.TaskNodeWithDepartmentDTO;
-import com.example.demo.model.TaskWithTransporterDTO;
-import com.example.demo.model.TransportTask;
-import com.example.demo.model.TransportTaskWithDepartmentDTO;
+import com.example.demo.model.*;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.RecordsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/records")
@@ -80,6 +81,13 @@ public class RecordsController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body(ApiResponse.failure(e.getMessage()));
         }
+    }
+
+    @GetMapping("/getFiles/{taskId}")
+    public ResponseEntity<?> getFiles(@PathVariable("taskId") int taskId) {
+        List<FileInfo> files = recordsService.getFilesByTaskId(taskId);
+
+        return ResponseEntity.ok(ApiResponse.success(files));
     }
 
 
