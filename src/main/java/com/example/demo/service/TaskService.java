@@ -23,5 +23,8 @@ public interface TaskService{
 
     List<TransportTaskWithDepartmentDTO> getStatusTasks(String status);
 
+    void cancelTask(int taskId, String reason);
+
 //    List<String> getAllTypes();
 }
+

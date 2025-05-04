@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 
 import com.example.demo.mapper.UserMapper;
+import com.example.demo.model.Notification;
 import com.example.demo.model.User;
 import com.example.demo.payload.LoginRequest;
 import com.example.demo.response.ApiResponse;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -86,6 +88,19 @@ public class UserController {
             Map<String, Integer> counts;
             counts = userService.getFreeTransCount();
             return ResponseEntity.ok(ApiResponse.success(counts));
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));
+        }catch (Exception e){
+            return ResponseEntity.status(500).body(ApiResponse.failure(e.getMessage()));
+        }
+    }
+
+    @GetMapping("/getNotifications/{userId}")
+    @PreAuthorize("hasAnyRole('doctor', 'transporter')")
+    public ResponseEntity<?> getNotifications(@PathVariable("userId") int userId) {
+        try{
+            List<Map<String, Object>> notifications = userService.getNotifications(userId);
+            return ResponseEntity.ok(ApiResponse.success(notifications));
         }catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));
         }catch (Exception e){

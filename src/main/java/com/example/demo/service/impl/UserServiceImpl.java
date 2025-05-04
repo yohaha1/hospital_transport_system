@@ -1,12 +1,17 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.mapper.NotificationMapper;
+import com.example.demo.mapper.ReceivedNotificationMapper;
 import com.example.demo.mapper.TransportTaskMapper;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.JwtEntity;
+import com.example.demo.model.Notification;
+import com.example.demo.model.TransportTask;
 import com.example.demo.model.User;
 import com.example.demo.security.MyUserDetails;
 import com.example.demo.service.UserService;
 import com.example.demo.util.JwtTokenUtil;
+import org.hibernate.annotations.Array;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,8 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -33,8 +37,15 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private TransportTaskMapper transportTaskMapper;
+
+    @Autowired
+    private ReceivedNotificationMapper receivedNotificationMapper;
+
+    @Autowired
+    private NotificationMapper notificationMapper;
 
     @Override
     public String login(String username, String password) throws Exception {
@@ -115,6 +126,42 @@ public class UserServiceImpl implements UserService {
         counts.put("all", all);
         counts.put("free", free);
         return counts;
+    }
+
+    @Override
+    public List<Map<String, Object>> getNotifications(int userId){
+        //获取所有通知id
+        List<Integer> notIds = receivedNotificationMapper.getNotIdsByUserId(userId);
+        if (notIds == null || notIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+        //获取所有通知
+        List<Notification> notifications = new ArrayList<>();
+        for(Integer notId : notIds) {
+            Notification notification = notificationMapper.selectByPrimaryKey((long) notId);
+            notifications.add(notification);
+        }
+
+        //获取任务详情并拼接
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Notification notification : notifications) {
+            Map<String, Object> notificationMap = new HashMap<>();
+
+            // 添加通知信息
+            notificationMap.put("notification", notification);
+
+            // 获取关联任务信息
+            if (notification.getTaskid() != null) {
+                TransportTask task = transportTaskMapper.selectByPrimaryKey(
+                        notification.getTaskid().longValue()
+                );
+                notificationMap.put("task", task);
+            }
+
+            result.add(notificationMap);
+        }
+
+        return result;
     }
 
 }

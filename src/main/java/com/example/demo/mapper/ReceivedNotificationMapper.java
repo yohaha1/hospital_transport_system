@@ -3,6 +3,8 @@ package com.example.demo.mapper;
 import com.example.demo.model.ReceivedNotification;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
 * @author haha
 * @description 针对表【received_notification(RECEIVED_NOTIFICATION)】的数据库操作Mapper
@@ -24,4 +26,5 @@ public interface ReceivedNotificationMapper {
 
     int updateByPrimaryKey(ReceivedNotification record);
 
+    List<Integer> getNotIdsByUserId(int userId);
 }

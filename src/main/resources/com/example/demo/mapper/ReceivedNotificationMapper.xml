@@ -51,4 +51,12 @@
         set 
         where   notificationID = #{notificationid} AND userID = #{userid} 
     </update>
+
+<!--    -->
+    <select id="getNotIdsByUserId" resultType="java.lang.Integer">
+        SELECT notificationID
+        FROM received_notification
+        WHERE userID = #{userid}
+    </select>
+
 </mapper>

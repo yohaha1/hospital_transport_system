@@ -4,6 +4,7 @@ import com.example.demo.mapper.*;
 import com.example.demo.model.*;
 import com.example.demo.util.QRCodeValidator;
 import com.example.demo.service.TaskService;
+import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,10 +24,18 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private FileInfoMapper fileMapper;
+
     @Autowired
     private DepartmentMapper departmentMapper;
+
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private NotificationMapper notificationMapper;
+
+    @Autowired
+    private ReceivedNotificationMapper receivedNotificationMapper;
 
     // 创建任务（不带文件）
     @Override
@@ -227,6 +236,39 @@ public class TaskServiceImpl implements TaskService {
                 throw new RuntimeException("更新任务状态为 DELIVERED 失败！");
             }
         }
+    }
+
+    @Override
+    public void cancelTask(int taskId, String reason) {
+        TransportTask task = transportTaskMapper.selectByPrimaryKey((long) taskId);
+
+        task.setStatus("CANCELED");
+        transportTaskMapper.updateByPrimaryKeySelective(task);
+
+        //新建通知
+        Notification notification = new Notification();
+        notification.setTaskid(taskId);
+        notification.setNotificationtype("TASK_CANCELLED");
+        notification.setMessage(String.format("任务已被取消，原因：%s", reason));
+        notification.setSendtime(new Date());
+        notificationMapper.insert(notification);
+
+        //通知医生和运送员
+        int docId = task.getDocid();
+        ReceivedNotification docNotification = new ReceivedNotification();
+        docNotification.setNotificationid(notification.getNotificationid());
+        docNotification.setUserid(docId);
+        receivedNotificationMapper.insert(docNotification);
+
+        if (task.getTransid() != null) {
+            int transId = task.getTransid();
+            ReceivedNotification transNotification = new ReceivedNotification();
+            transNotification.setNotificationid(notification.getNotificationid());
+            transNotification.setUserid(transId);
+            receivedNotificationMapper.insert(transNotification);
+        }
+
+        System.out.println("任务取消: " + taskId);
     }
 
 //    @Override

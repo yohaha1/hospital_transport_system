@@ -104,6 +104,21 @@ public class TaskController {
         }
     }
 
+    @PostMapping("/cancel/{taskId}")
+    @PreAuthorize("hasRole('ROLE_doctor')")
+    public ResponseEntity<?> cancelTask(@PathVariable("taskId") int taskId,
+                                        @RequestParam("reason") String reason){
+        try{
+            taskService.cancelTask(taskId, reason);
+            return ResponseEntity.ok(ApiResponse.success(reason));
+        }catch (IllegalArgumentException ex){
+            return ResponseEntity.badRequest().body(ApiResponse.failure("无效输入: " +ex.getMessage()));
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body(ApiResponse.failure("出错了！" +  ex.getMessage()));
+        }
+    }
+
+
 //    @GetMapping("/getAllTypes")
 //    @PreAuthorize("hasAnyRole('doctor','admin')")
 //    public ResponseEntity<?> getAllTypes() {
