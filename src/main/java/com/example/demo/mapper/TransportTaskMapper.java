@@ -22,6 +22,7 @@ public interface TransportTaskMapper {
     int insertSelective(TransportTask record);
 
     TransportTask selectByPrimaryKey(Long id);
+    TransportTask selectByPrimaryKeyForUpdate(Long taskId);
 
     int updateByPrimaryKeySelective(TransportTask record);
 
@@ -30,6 +31,8 @@ public interface TransportTaskMapper {
     List<TransportTask> findByFilters(String status, Date startDate, Date endDate);
 
     List<TransportTask> findByTransporterAndFilters(int transporterId,String status, Date startDate, Date endDate);
+
+    List<TransportTask> findByDoctorAndFilters(int doctorId,String status, Date startDate, Date endDate);
 
     List<TransportTask> findByDepartmentDoctorIdsAndFilters(List<Integer> doctorIds, String status, Date startDate, Date endDate);
 

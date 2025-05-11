@@ -10,7 +10,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,8 +22,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import java.util.List;
 
 @Configuration
-@EnableMethodSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Autowired
@@ -83,6 +81,7 @@ public class SecurityConfig {
                         // 登录和注册允许匿名访问
                         .requestMatchers("/user/login").permitAll()
                         .requestMatchers("/files/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/ws/**").permitAll()
                         // 允许 OPTIONS 请求
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         // 其他请求需要认证
@@ -97,7 +96,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(List.of("http://localhost:5173"));
-                    config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT"));
+                    config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "CONNECT"));
                     config.setAllowedHeaders(List.of("*"));
                     config.setAllowCredentials(true);
                     config.setMaxAge(3600L);

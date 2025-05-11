@@ -35,6 +35,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain chain)
             throws ServletException, IOException {
+
+        String requestURI = request.getRequestURI();
+
+        // 如果是 WebSocket 路径，直接放行
+        if (requestURI.startsWith("/ws")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         String header = request.getHeader("Authorization");
 //        System.out.println("Authorization Header: " + header);
 

@@ -26,6 +26,17 @@ spring:
 #      additional-paths: src/main/java
 #      enabled: true
 
+# WebSocket STOMP Broker Relay 指向 RabbitMQ
+websocket:
+  stomp:
+    relay:
+      host: localhost
+      port: 61613
+      login: guest
+      passcode: guest
+    application-destination-prefixes: /app
+    topic-prefix: /topic
+
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml  # 扫描所有的 XML 映射文件
   type-aliases-package: com.example.demo.model  # 扫描实体类包

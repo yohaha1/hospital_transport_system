@@ -100,12 +100,28 @@
 			<version>3.5.2</version>
 		</dependency>
 
-<!--		热部署-->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-devtools</artifactId>-->
-<!--			<optional>true</optional>-->
-<!--		</dependency>-->
+
+		<!-- WebSocket 与 STOMP -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>io.projectreactor.netty</groupId>
+					<artifactId>reactor-netty</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>io.projectreactor.netty</groupId>
+			<artifactId>reactor-netty-http</artifactId>
+			<version>1.1.13</version> <!-- 与 Spring Boot 3.4.4 兼容的版本 -->
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20231013</version>
+		</dependency>
 
 	</dependencies>
 

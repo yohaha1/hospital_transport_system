@@ -2,11 +2,16 @@ package com.example.demo.service.impl;
 
 import com.example.demo.mapper.*;
 import com.example.demo.model.*;
+import com.example.demo.service.WebSocketMessageService;
 import com.example.demo.util.QRCodeValidator;
 import com.example.demo.service.TaskService;
-import org.apache.ibatis.jdbc.Null;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File ;
@@ -36,6 +41,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private ReceivedNotificationMapper receivedNotificationMapper;
+
+    @Autowired
+    private WebSocketMessageService webSocketMessageService;
 
     // 创建任务（不带文件）
     @Override
@@ -123,6 +131,11 @@ public class TaskServiceImpl implements TaskService {
 
     //运送员接单
     @Override
+    @Transactional(
+            rollbackFor = {Exception.class},
+            propagation = Propagation.REQUIRES_NEW,
+            isolation = Isolation.REPEATABLE_READ
+    )
     public void acceptTask(int taskId, int transporterId) {
         TransportTask task = transportTaskMapper.selectByPrimaryKey((long) taskId);
         if(task == null) {
@@ -143,7 +156,7 @@ public class TaskServiceImpl implements TaskService {
     //开启任务
     @Override
     public void startTask(int taskId, int transporterId, String qrCodeData) {
-        stateCheck(taskId,transporterId,"ACCEPTED");
+        stateCheck(taskId,transporterId,"TRANSPORTING");
 
         // 初始化二维码校验器
         QRCodeValidator qrCodeValidator = new QRCodeValidator(departmentMapper);
@@ -155,7 +168,7 @@ public class TaskServiceImpl implements TaskService {
         }
 
         // 校验二维码
-        qrCodeValidator.validateQRCode(qrCodeData, startNode.getDepartmentid(), 120); // 120秒过期
+        qrCodeValidator.validateQRCode(qrCodeData, startNode.getDepartmentid(), 600); // 600秒过期
 
         // 更新任务节点表，记录时间
         startNode.setHandovertime(new Date());
@@ -164,27 +177,12 @@ public class TaskServiceImpl implements TaskService {
             throw new RuntimeException("更新任务节点时间失败！");
         }
 
-        //更新任务状态
-        TransportTask task = transportTaskMapper.selectByPrimaryKey((long) taskId);
-        task.setStatus("TRANSPORTING");
-        int res = transportTaskMapper.updateByPrimaryKeySelective(task);
-        if (res != 1) {
-            throw new RuntimeException("更新任务状态失败！");
-        }
     }
 
     //任务交接
     @Override
     public void handOverTask(int taskId, int transporterId, String qrCodeData) {
         stateCheck(taskId,transporterId,"TRANSPORTING");
-
-//        TaskNode currentNode = taskNodeMapper.selectByTaskIdAndDepartmentId(taskId, departmentId);
-//        if(currentNode == null) {
-//            throw new IllegalArgumentException("目标部门的任务节点不存在！");
-//        }
-//        if (currentNode.getHandovertime() != null) {
-//            throw new IllegalArgumentException("目标节点已完成交接，无法重复交接！");
-//        }
 
         //获取改任务的所有节点
         List<TaskNode> taskNodes = taskNodeMapper.selectByTaskId(taskId);
@@ -213,28 +211,26 @@ public class TaskServiceImpl implements TaskService {
         // 校验二维码
         qrCodeValidator.validateQRCode(qrCodeData, expectedDepartment.getDepartmentid(), 120); // 120秒过期
 
-        //更新当前节点的交接时间
-        correctNode.setHandovertime(new Date());
-        int res = taskNodeMapper.updateByPrimaryKeySelective(correctNode);
-        if (res != 1) {
-            throw new RuntimeException("更新任务节点交接时间失败！");
-        }
+        User trans = userMapper.selectByPrimaryKey((long) transporterId);
+        TransportTask task = transportTaskMapper.selectByPrimaryKey((long) taskId);
 
-        // 检查是否是最后一个节点
-        int maxSequence = taskNodes.stream()
-                .mapToInt(TaskNode::getSequence)
-                .max()
-                .orElseThrow(() -> new IllegalArgumentException("无法获取任务的最大节点序号！"));
+        NoticeDTO notice = new NoticeDTO();
+        notice.setTaskId(taskId);
+        notice.setItemName(task.getItemname());
+        notice.setDepartmentId(correctNode.getDepartmentid());
+        notice.setTransName(trans.getName());
+        notice.setType("handoverConfirm");
 
-        if (correctNode.getSequence() == maxSequence) {
-            // 如果是最后一个节点，更新任务状态为 "DELIVERED"
-            TransportTask task = transportTaskMapper.selectByPrimaryKey((long) taskId);
-            task.setStatus("DELIVERED");
-            task.setCompletion(new Date());
-            int taskRes = transportTaskMapper.updateByPrimaryKeySelective(task);
-            if (taskRes != 1) {
-                throw new RuntimeException("更新任务状态为 DELIVERED 失败！");
-            }
+        try {
+            webSocketMessageService.sendNoticeToDepartment(correctNode.getDepartmentid(), notice);
+        } catch (JsonProcessingException e) {
+            // 处理 JSON 序列化异常（如 NoticeDTO 无法被 Jackson 序列化）
+            System.err.println("JSON serialization error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            // 处理 WebSocket 发送异常（如连接关闭）
+            System.err.println("WebSocket send error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

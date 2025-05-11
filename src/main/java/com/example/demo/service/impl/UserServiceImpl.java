@@ -140,6 +140,7 @@ public class UserServiceImpl implements UserService {
         for(Integer notId : notIds) {
             Notification notification = notificationMapper.selectByPrimaryKey((long) notId);
             notifications.add(notification);
+//            System.out.println("notificationttttttttttt"+notification.getSendtime());
         }
 
         //获取任务详情并拼接
@@ -162,6 +163,43 @@ public class UserServiceImpl implements UserService {
         }
 
         return result;
+    }
+
+    @Override
+    public Map<String, Object> getUserStatisticData(int userId) {
+        User user = userMapper.selectByPrimaryKey((long) userId);
+        Map<String, Object> data = new HashMap<>();
+        List<TransportTask> tasks = new ArrayList<>();
+
+        if (user.getRole().equals("transporter")) {
+            tasks = transportTaskMapper.findByTransporterAndFilters(userId, null, null, null);
+        } else if (user.getRole().equals("doctor")) {
+            tasks = transportTaskMapper.findByDoctorAndFilters(userId, null, null, null);
+        }
+
+        int allNum = tasks.size();
+        int completedNum = (int) tasks.stream()
+                .filter(task -> "DELIVERED".equals(task.getStatus()))
+                .count();
+
+        long totalDuration = 0;
+        int completedCount = 0;
+        for (TransportTask task : tasks) {
+            if ("DELIVERED".equals(task.getStatus()) && task.getCreatetime() != null && task.getCompletion() != null) {
+                long duration = (task.getCompletion().getTime() - task.getCreatetime().getTime()) / 60000; // 单位：分钟
+                totalDuration += duration;
+                completedCount++;
+            }
+        }
+
+        double averageTime = completedCount > 0 ? (double) totalDuration / completedCount : 0;
+
+        // 返回类型改为 Map<String, Object> 以兼容 String 类型的 averageTime
+        data.put("allNum", allNum);
+        data.put("completedNum", completedNum);
+        data.put("averageTime", String.format("%.1f", averageTime)); // 字符串格式
+
+        return data;
     }
 
 }

@@ -21,5 +21,8 @@ public interface UserService {
     Map<String,Integer> getFreeTransCount() throws Exception;
 
     List<Map<String, Object>> getNotifications(int userId);
+
+    Map<String, Object> getUserStatisticData(int userId);
 }
+
 

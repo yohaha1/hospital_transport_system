@@ -22,7 +22,6 @@ public class TaskController {
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_doctor')")
     public ResponseEntity<?> createTask(@RequestBody CreateTaskDTO dto) {
-        System.out.println("testttttttttttttttttttt");
         try {
             int taskId = taskService.createTask(dto.getTask(), dto.getNodes());
             return ResponseEntity.ok(ApiResponse.success(taskId));
@@ -105,7 +104,7 @@ public class TaskController {
     }
 
     @PostMapping("/cancel/{taskId}")
-    @PreAuthorize("hasRole('ROLE_doctor')")
+    @PreAuthorize("hasAnyRole('doctor', 'transporter')")
     public ResponseEntity<?> cancelTask(@PathVariable("taskId") int taskId,
                                         @RequestParam("reason") String reason){
         try{

@@ -108,4 +108,16 @@ public class UserController {
         }
     }
 
+    @GetMapping("/getUserStatisticData/{userId}")
+    @PreAuthorize("hasAnyRole('doctor', 'transporter')")
+    public ResponseEntity<?> getUserStatisticData(@PathVariable("userId") int userId) {
+        try{
+            Map<String, Object> data = userService.getUserStatisticData(userId);
+            return ResponseEntity.ok(ApiResponse.success(data));
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));
+        }catch (Exception e){
+            return ResponseEntity.status(500).body(ApiResponse.failure(e.getMessage()));
+        }
+    }
 }

@@ -86,7 +86,7 @@ public class RecordsServiceImpl implements RecordsService {
             dto.setDoctorName(docName);
             result.add(dto);
         }
-        System.out.println("testttttttttttt"+result);
+//        System.out.println("testttttttttttt"+result);
         return result;
     }
 
