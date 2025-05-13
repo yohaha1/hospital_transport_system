@@ -70,6 +70,18 @@ public class RecordsController {
         }
     }
 
+    @GetMapping("/departmentHandoverTask/{departmentId}")
+    @PreAuthorize("hasRole('ROLE_doctor')")
+    public ResponseEntity<?> getdepartmentHandoverTask(
+            @PathVariable("departmentId") int departmentId){
+        try{
+            List<TaskWithTransporterDTO> tasks = recordsService.getDepartmentHandoverTask(departmentId);
+            return ResponseEntity.ok(ApiResponse.success(tasks));
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body(ApiResponse.failure(ex.getMessage()));
+        }
+    }
+
     //查看某任务的节点序列
     @GetMapping("/taskNodes/{taskId}")
     public ResponseEntity<?> getTaskNodesByTaskId(@PathVariable("taskId") int taskId) {

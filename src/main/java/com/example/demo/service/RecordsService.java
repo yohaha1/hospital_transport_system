@@ -18,4 +18,6 @@ public interface RecordsService {
     List<TaskNodeWithDepartmentDTO> getTaskNodesByTaskId(int taskId);
 
     List<FileInfo> getFilesByTaskId(int taskId);
+
+    List<TaskWithTransporterDTO> getDepartmentHandoverTask(int departmentId);
 }

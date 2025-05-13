@@ -200,4 +200,14 @@
         FROM transport_task
         WHERE status = 'TRANSPORTING'
     </select>
+    <select id="selectByTaskIds"  parameterType="java.util.List" resultType="com.example.demo.model.TransportTask">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM transport_task
+        WHERE taskID IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+            AND status = 'TRANSPORTING'
+    </select>
 </mapper>

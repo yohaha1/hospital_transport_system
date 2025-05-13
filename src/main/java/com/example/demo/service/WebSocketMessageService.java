@@ -14,7 +14,6 @@ public class WebSocketMessageService {
     @Autowired
     private DepartmentWebSocketHandler webSocketHandler;
 
-    // 将 departmentId 参数从 String 改为 int
     public void sendNoticeToDepartment(int departmentId, NoticeDTO notice) throws JsonProcessingException, IOException {
         webSocketHandler.broadcastToDepartment(departmentId, notice);
     }

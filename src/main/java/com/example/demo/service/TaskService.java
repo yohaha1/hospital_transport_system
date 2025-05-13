@@ -25,6 +25,8 @@ public interface TaskService{
 
     void cancelTask(int taskId, String reason);
 
+    void handOverConfirm(int taskId, int transporterId, int departmentId);
+
 //    List<String> getAllTypes();
 }
 

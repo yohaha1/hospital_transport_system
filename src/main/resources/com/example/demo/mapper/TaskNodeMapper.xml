@@ -88,6 +88,12 @@
         WHERE taskID = #{taskId}
         ORDER BY sequence ASC
     </select>
+<!--    获取途径某部门的任务列表-->
+    <select id="findNodesByDepartmentId" resultType="java.lang.Integer">
+        SELECT taskID
+        FROM task_node
+        WHERE departmentID = #{departmentId} AND handoverTime IS NULL
+    </select>
 
 
 </mapper>

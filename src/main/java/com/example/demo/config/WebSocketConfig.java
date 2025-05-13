@@ -1,23 +1,24 @@
 package com.example.demo.config;
 
 import com.example.demo.util.DepartmentWebSocketHandler;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.*;
 
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
-    @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler(), "/ws")
-                .setAllowedOrigins("*"); // 允许所有来源
+    private final DepartmentWebSocketHandler wsHandler;
+
+    // 通过构造器注入，确保使用 Spring 容器中的单例
+    public WebSocketConfig(DepartmentWebSocketHandler wsHandler) {
+        this.wsHandler = wsHandler;
     }
 
-    @Bean
-    public WebSocketHandler webSocketHandler() {
-        return new DepartmentWebSocketHandler();
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry
+                .addHandler(wsHandler, "/ws")
+                .setAllowedOrigins("*");
     }
 }

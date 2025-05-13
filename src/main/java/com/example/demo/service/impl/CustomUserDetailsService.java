@@ -21,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("用户不存在");
         }
-        System.out.println("找到用户"+user);
+//        System.out.println("找到用户"+user);
 
         return new MyUserDetails(user);
     }

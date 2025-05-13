@@ -23,6 +23,7 @@ public interface TransportTaskMapper {
 
     TransportTask selectByPrimaryKey(Long id);
     TransportTask selectByPrimaryKeyForUpdate(Long taskId);
+    List<TransportTask> selectByTaskIds(List<Integer> taskIds);
 
     int updateByPrimaryKeySelective(TransportTask record);
 

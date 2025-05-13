@@ -65,7 +65,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         // 将认证对象存入 SecurityContext
                         SecurityContextHolder.getContext().setAuthentication(authentication);
-                        System.out.println("保存认证信息  " + username);
+//                        System.out.println("保存认证信息  " + username);
                     }
                 }
             }

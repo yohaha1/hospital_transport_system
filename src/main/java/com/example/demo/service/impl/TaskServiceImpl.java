@@ -235,6 +235,53 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public void handOverConfirm(int taskId, int transporterId , int departmentId) {
+        stateCheck(taskId,transporterId,"TRANSPORTING");
+        // 1. 查询并找到下一个节点
+        List<TaskNode> nodes = taskNodeMapper.selectByTaskId(taskId);
+        int maxCompletedSeq = nodes.stream()
+                .filter(n -> n.getHandovertime() != null)
+                .mapToInt(TaskNode::getSequence)
+                .max().orElse(0);
+        TaskNode nextNode = nodes.stream()
+                .filter(n -> n.getSequence() == maxCompletedSeq + 1)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("无待处理节点"));
+
+        // 2. 更新节点交接时间
+        nextNode.setHandovertime(new Date());
+        int updateCount = taskNodeMapper.updateByPrimaryKeySelective(nextNode);
+        if (updateCount != 1) {
+            throw new RuntimeException("更新任务节点交接时间失败！");
+        }
+
+        // 3. 如果是最后一个节点，则更新任务状态
+        int maxSeqAll = nodes.stream().mapToInt(TaskNode::getSequence).max().orElse(0);
+        if (nextNode.getSequence() == maxSeqAll) {
+            TransportTask task = transportTaskMapper.selectByPrimaryKey((long) taskId);
+            task.setStatus("DELIVERED");
+            task.setCompletion(new Date());
+            int taskUpdate = transportTaskMapper.updateByPrimaryKeySelective(task);
+            if (taskUpdate != 1) {
+                throw new RuntimeException("更新任务状态为 DELIVERED 失败！");
+            }
+        }
+
+        NoticeDTO notice = new NoticeDTO();
+        notice.setType("handoverConfirmAck");
+
+        try {
+            webSocketMessageService.sendNoticeToDepartment(departmentId, notice);
+        } catch (JsonProcessingException e) {
+            System.err.println("JSON 序列化异常: " + e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.err.println("WebSocket 发送失败: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void cancelTask(int taskId, String reason) {
         TransportTask task = transportTaskMapper.selectByPrimaryKey((long) taskId);
 

@@ -91,6 +91,40 @@ public class RecordsServiceImpl implements RecordsService {
     }
 
     @Override
+    public List<TaskWithTransporterDTO> getDepartmentHandoverTask(int departmentId) {
+        List<Integer> taskIds = taskNodeMapper.findNodesByDepartmentId(departmentId);
+        List<TransportTask> taskList = transportTaskMapper.selectByTaskIds(taskIds);
+
+        List<TaskWithTransporterDTO> result = new ArrayList<>();
+        for (TransportTask task : taskList) {
+            Integer transId = task.getTransid();
+            Integer docId = task.getDocid();
+            String transName;
+            String docName;
+            if(transId != null){
+                User trans = userMapper.selectByPrimaryKey((long)transId);
+                transName = trans.getName();
+            }else{
+                transName = "";
+            }
+            if(docId != null){
+                User doc = userMapper.selectByPrimaryKey((long)docId);
+                docName = doc.getName();
+            }else{
+                docName = "";
+            }
+            //  组装返回
+            TaskWithTransporterDTO dto = new TaskWithTransporterDTO();
+            dto.setTask(task);
+            dto.setTransporterName(transName);
+            dto.setDoctorName(docName);
+            result.add(dto);
+        }
+        System.out.println("获取getDepartmentHandoverTask： "+result);
+        return result;
+    }
+
+    @Override
     public List<TaskNodeWithDepartmentDTO> getTaskNodesByTaskId(int taskId) {
         if(taskId == 0){
             throw new IllegalArgumentException("任务ID不能为空！");

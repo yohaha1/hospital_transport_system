@@ -94,7 +94,23 @@ public class TaskController {
                                                @RequestParam("transporterId") int transporterId,
                                                @RequestParam("qrCodeData") String qrCodeData){
         try{
+//            System.out.println("二维码: " + qrCodeData);
             taskService.handOverTask(taskId,transporterId,qrCodeData);
+            return ResponseEntity.ok(ApiResponse.success("任务交接成功！"));
+        }catch (IllegalArgumentException ex){
+            return ResponseEntity.badRequest().body(ApiResponse.failure("无效输入: " +ex.getMessage()));
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body(ApiResponse.failure("出错了！" +  ex.getMessage()));
+        }
+    }
+
+    @PostMapping("/handoverConfirm/{taskId}")
+    @PreAuthorize("hasRole('ROLE_doctor')")
+    public ResponseEntity<?> handOverConfirm(@PathVariable("taskId") int taskId,
+                                          @RequestParam("transporterId") int transporterId,
+                                          @RequestParam("departmentId") int departmentId){
+        try{
+            taskService.handOverConfirm(taskId,transporterId,departmentId);
             return ResponseEntity.ok(ApiResponse.success("任务交接成功！"));
         }catch (IllegalArgumentException ex){
             return ResponseEntity.badRequest().body(ApiResponse.failure("无效输入: " +ex.getMessage()));
