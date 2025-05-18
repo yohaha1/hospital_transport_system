@@ -16,12 +16,12 @@ public class ApiResponse<T> {
         this.error = error;
     }
 
-    // 工厂方法：用于快速生成成功响应
+    // 用于快速生成成功响应
     public static <T> ApiResponse<T> success(T data) {
         return new ApiResponse<>(true, data, null);
     }
 
-    // 工厂方法：用于快速生成失败响应
+    // 用于快速生成失败响应
     public static <T> ApiResponse<T> failure(String error) {
         return new ApiResponse<>(false, null, error);
     }

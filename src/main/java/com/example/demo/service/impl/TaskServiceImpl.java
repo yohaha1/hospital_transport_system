@@ -45,7 +45,7 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private WebSocketMessageService webSocketMessageService;
 
-    // 创建任务（不带文件）
+    // 创建任务
     @Override
     public int createTask(TransportTask task, List<TaskNode> nodes) {
         task.setCreatetime(new Date());
@@ -264,6 +264,33 @@ public class TaskServiceImpl implements TaskService {
             int taskUpdate = transportTaskMapper.updateByPrimaryKeySelective(task);
             if (taskUpdate != 1) {
                 throw new RuntimeException("更新任务状态为 DELIVERED 失败！");
+            }
+        }else{
+            int nextSeq = nextNode.getSequence() + 1;
+            TaskNode nextNextNode = nodes.stream()
+                    .filter(n -> n.getSequence() == nextSeq)
+                    .findFirst()
+                    .orElse(null);
+
+            if (nextNextNode != null) {
+                int notifyDeptId = nextNextNode.getDepartmentid();
+                NoticeDTO preNotice = new NoticeDTO();
+                preNotice.setType("PreNotice");
+                preNotice.setTaskId(taskId);
+                preNotice.setDepartmentId(notifyDeptId);
+
+                TransportTask task = transportTaskMapper.selectByPrimaryKey((long) taskId);
+                preNotice.setItemName(task.getItemname());
+                preNotice.setTransName(userMapper
+                        .selectByPrimaryKey((long) transporterId)
+                        .getName());
+                try {
+                    webSocketMessageService.sendNoticeToDepartment(notifyDeptId, preNotice);
+                } catch (Exception e) {
+                    System.err.println("发送预通知失败：" + e.getMessage());
+                }
+            } else {
+                System.err.println("未找到下一个交接节点，无法发送预通知");
             }
         }
 

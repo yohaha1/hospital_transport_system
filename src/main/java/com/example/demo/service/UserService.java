@@ -13,6 +13,7 @@ public interface UserService {
 
     String login(String username, String password) throws Exception;
     String addUser (User user) throws Exception;
+    String delUser(int userId) throws Exception;
 
     User selectByUsername(String username) throws Exception;
 
@@ -23,6 +24,8 @@ public interface UserService {
     List<Map<String, Object>> getNotifications(int userId);
 
     Map<String, Object> getUserStatisticData(int userId);
+
+    List<User> getAllUsers();
 }
 
 

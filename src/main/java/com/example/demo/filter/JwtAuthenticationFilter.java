@@ -45,11 +45,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String header = request.getHeader("Authorization");
-//        System.out.println("Authorization Header: " + header);
+//        System.out.println("Header: " + header);
 
         if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
             String token = header.substring(7);
-//            System.out.println("Extracted Token: " + token);
+//            System.out.println("提取 Token: " + token);
 
             if (JwtTokenUtil.validateToken(token)) {
                 String username = jwtTokenUtil.extractUsername(token);

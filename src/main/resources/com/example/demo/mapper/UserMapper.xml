@@ -120,5 +120,10 @@
         WHERE role = 'transporter'
     </select>
 
+    <select id="getAllUsers" resultType="com.example.demo.model.User">
+        SELECT *
+        FROM user
+    </select>
+
 
 </mapper>

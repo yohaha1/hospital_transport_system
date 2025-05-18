@@ -49,7 +49,7 @@ public class TaskController {
     }
 
     @GetMapping("/searchByStatus")
-    @PreAuthorize("hasAnyRole('doctor', 'transporter')")
+    @PreAuthorize("hasAnyRole('doctor', 'transporter','admin')")
     public ResponseEntity<?> getStatusTasks(@RequestParam("status") String status) {
         try {
             List<TransportTaskWithDepartmentDTO> res = taskService.getStatusTasks(status);
@@ -60,7 +60,7 @@ public class TaskController {
     }
 
     @PostMapping("/accept/{taskId}")
-    @PreAuthorize("hasRole('ROLE_transporter')")
+    @PreAuthorize("hasAnyRole('transporter','admin')")
     public ResponseEntity<?> acceptTask(@PathVariable("taskId") int taskId,
                                         @RequestParam("transporterId") int transporterId){
         try{

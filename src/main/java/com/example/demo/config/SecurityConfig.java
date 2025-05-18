@@ -35,13 +35,13 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
-    // 1. 配置认证管理器
+    //  配置认证管理器
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
         return authenticationProvider()::authenticate;
     }
 
-    // 2. 配置认证提供者
+    //  配置认证提供者
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -50,13 +50,13 @@ public class SecurityConfig {
         return provider;
     }
 
-    // 3. 配置密码加密器
+    // 配置密码加密器
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // 4. 安全过滤器链
+    // 安全过滤器链
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -95,7 +95,7 @@ public class SecurityConfig {
                 // 允许跨域
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:5173"));
+                    config.setAllowedOrigins(List.of("http://localhost:5173","http://localhost:8081"));
                     config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "CONNECT"));
                     config.setAllowedHeaders(List.of("*"));
                     config.setAllowCredentials(true);

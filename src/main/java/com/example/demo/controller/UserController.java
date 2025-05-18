@@ -57,11 +57,37 @@ public class UserController {
         }
     }
 
+    @GetMapping("/getAllUsers")
+    @PreAuthorize("hasRole('ROLE_admin')")
+    public ResponseEntity<?> getAllUsers() {
+        try{
+            List<User> res = userService.getAllUsers();
+            return ResponseEntity.ok(ApiResponse.success(res));
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));
+        }catch (Exception e){
+            return ResponseEntity.status(500).body(ApiResponse.failure(e.getMessage()));
+        }
+    }
+
     @PostMapping("/add")
     @PreAuthorize("hasRole('ROLE_admin')")
     public ResponseEntity<?> addUser(@RequestBody User user) {
         try{
             String res = userService.addUser(user);
+            return ResponseEntity.ok(ApiResponse.success(res));
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));
+        }catch (Exception e){
+            return ResponseEntity.status(500).body(ApiResponse.failure(e.getMessage()));
+        }
+    }
+
+    @PostMapping("/del/{userId}")
+    @PreAuthorize("hasRole('ROLE_admin')")
+    public ResponseEntity<?> delUser(@PathVariable int userId) {
+        try{
+            String res = userService.delUser(userId);
             return ResponseEntity.ok(ApiResponse.success(res));
         }catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));
@@ -96,7 +122,7 @@ public class UserController {
     }
 
     @GetMapping("/getNotifications/{userId}")
-    @PreAuthorize("hasAnyRole('doctor', 'transporter')")
+    @PreAuthorize("hasAnyRole('doctor', 'transporter', 'admin')")
     public ResponseEntity<?> getNotifications(@PathVariable("userId") int userId) {
         try{
             List<Map<String, Object>> notifications = userService.getNotifications(userId);

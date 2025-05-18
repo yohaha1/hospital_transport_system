@@ -30,14 +30,14 @@ public class DepartmentWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         // 打印连接建立事件
-        System.out.println("[连接建立][ sessionId  " + session.getId() + "] ");
+        System.out.println("连接建立 sessionId  " + session.getId());
     }
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
         String payload = message.getPayload();
         // 打印接收的原始消息
-        System.out.println("接受消息：" + session.getId() + "] " + payload);
+        System.out.println("接受消息：" + session.getId() + " " + payload);
 
         try {
             JsonNode json = objectMapper.readTree(payload);
@@ -55,17 +55,17 @@ public class DepartmentWebSocketHandler extends TextWebSocketHandler {
                     for (TextMessage cached : cacheList) {
                         try {
                             session.sendMessage(cached);
-                            System.out.println("[回放缓存] [" + session.getId() + "] " + cached.getPayload());
+                            System.out.println("回放缓存" + session.getId() + " " + cached.getPayload());
                         } catch (IOException e) {
-                            System.out.println("[回放错误 ][" + session.getId() + "] " + e.getMessage());
+                            System.out.println("回放错误 " + session.getId() + " " + e.getMessage());
                         }
                     }
                 }
             } else {
-                System.out.println("[类型错误 ][" + session.getId() + "] type=" + type);
+                System.out.println("类型错误 " + session.getId() + " type=" + type);
             }
         } catch (IOException e) {
-            System.out.println("[PARSE-错误][" + session.getId() + "] " + e.getMessage());
+            System.out.println("PARSE-错误" + session.getId() + " " + e.getMessage());
         }
     }
 
@@ -74,7 +74,7 @@ public class DepartmentWebSocketHandler extends TextWebSocketHandler {
         try {
             jsonStr = objectMapper.writeValueAsString(notice);
         } catch (JsonProcessingException e) {
-            System.out.println("[序列化错误 ] " + e.getMessage());
+            System.out.println("序列化错误  " + e.getMessage());
             return;
         }
         TextMessage msg = new TextMessage(jsonStr);
@@ -85,7 +85,7 @@ public class DepartmentWebSocketHandler extends TextWebSocketHandler {
             offlineCache
                     .computeIfAbsent(departmentId, d -> new CopyOnWriteArrayList<>())
                     .add(msg);
-            System.out.println("[缓存消息 ][" + departmentId + "] " + jsonStr);
+            System.out.println("缓存消息 " + departmentId + " " + jsonStr);
             System.out.println("之后缓存内容：  "+ offlineCache);
 
             return;
@@ -96,9 +96,9 @@ public class DepartmentWebSocketHandler extends TextWebSocketHandler {
         for (WebSocketSession sess : sessions) {
             try {
                 sess.sendMessage(msg);
-                System.out.println("[发送消息][" + sess.getId() + "] 到部门 =" + departmentId + " 内容=" + jsonStr);
+                System.out.println("发送消息" + sess.getId() + " 到部门 =" + departmentId + " 内容=" + jsonStr);
             } catch (IOException e) {
-                System.out.println("[发送错误 ][" + sess.getId() + "] " + e.getMessage());
+                System.out.println("发送错误 " + sess.getId() + " " + e.getMessage());
             }
         }
     }
@@ -106,6 +106,6 @@ public class DepartmentWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         departmentSessions.values().forEach(list -> list.remove(session));
-        System.out.println("[连接关闭][sessionId:" + session.getId() + "] status=" + status);
+        System.out.println("连接关闭 sessionId:" + session.getId() + " status=" + status);
     }
 }

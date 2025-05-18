@@ -25,12 +25,12 @@ public class JwtTokenUtil {
 
     public String generateToken(JwtEntity jwtEntity) {
         return Jwts.builder()
-                .setSubject(jwtEntity.getUserName())                      // 设置 token 主体为用户名
-                .setIssuedAt(new Date())                   // 设置发行时间
+                .setSubject(jwtEntity.getUserName())     // 设置 token 主体为用户名
+                .setIssuedAt(new Date())            // 设置发行时间
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)) // 设置过期时间
                 .claim("id", jwtEntity.getUserId())
                 .claim("role", jwtEntity.getRole())
-                .signWith(SignatureAlgorithm.HS256, jwtSecret) // 使用 HS512 算法签名
+                .signWith(SignatureAlgorithm.HS256, jwtSecret)
                 .compact();
     }
 
@@ -82,7 +82,6 @@ public class JwtTokenUtil {
         String jwtToken = request.getHeader(TOKEN_HEADER);
         return validateToken(jwtToken);
     }
-
     private boolean isTokenExpired(String token) {
         Date expiration = Jwts.parser()
                 .setSigningKey(jwtSecret)
@@ -91,5 +90,6 @@ public class JwtTokenUtil {
                 .getExpiration();
         return expiration.before(new Date());
     }
+
 
 }

@@ -72,8 +72,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getAllUsers() {
+        return userMapper.getAllUsers();
+    }
+
+    @Override
     public String addUser(User user) throws Exception {
-        System.out.println("Attempting to add user: " + user.getUsername());
+        System.out.println("添加用户: " + user.getUsername());
 
         // 检查用户名是否已存在
         if (userMapper.selectByUsername(user.getUsername()) != null) {
@@ -85,9 +90,23 @@ public class UserServiceImpl implements UserService {
 //        System.out.println(user);
 
         // 插入用户
+        user.setDepartmentid(101);
         userMapper.insert(user);
 
         return "用户创建成功";
+    }
+
+    @Override
+    public String delUser(int userID) throws Exception {
+        // 检查用户名是否存在
+        User user = userMapper.selectByPrimaryKey((long) userID);
+        if (user == null) {
+            throw new IllegalArgumentException("用户不存在");
+        }
+
+        userMapper.deleteByPrimaryKey((long) userID);
+
+        return "用户删除成功";
     }
 
     @Override
